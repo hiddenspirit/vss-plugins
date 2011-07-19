@@ -1,0 +1,216 @@
+﻿// LoadScript("common/common.js");
+
+// ---------------------------------------------------------------------------
+// Functions
+// ---------------------------------------------------------------------------
+
+// Get higher reading speed from level. 1: 35, 2: 31, 3: 27, 4: 23.
+// level: higher reading speed level
+// Return: reading speed
+Common.getRsFromHighLevel(level);
+
+// Get lower reading speed from level. 1: 5, 2: 10, 3: 13, 4: 15.
+// level: lower reading speed level
+// Return: reading speed
+Common.getRsFromLowLevel(level);
+
+// Check duration against minimum and maximun.
+// duration: duration in milliseconds of the subtitle
+// Return: duration within minimum and maximum bounds
+Common.checkMinMaxDuration(duration);
+
+// Get ideal duration.
+// len: length of the stripped subtitle text
+// Return: ideal duration
+Common.getIdealDuration(len);
+
+// Get duration from text length and reading speed.
+// len: length of the stripped subtitle text
+// rs: reading speed of the subtitle
+// Return: duration
+Common.getDurationFromLengthRs(len, rs);
+
+// Get reading speed from text length and duration.
+// len: length of the stripped subtitle text
+// duration: duration in milliseconds of the subtitle
+// Return: reading speed
+Common.getRsFromLengthDuration(len, duration);
+
+// Get duration from text length and characters per second.
+// len: length of the stripped subtitle text
+// cps: characters per second of the subtitle
+// Return: duration
+Common.getDurationFromLengthCps(len, cps);
+
+// Get characters per second from text length and duration.
+// len: length of the stripped subtitle text
+// duration: duration in milliseconds of the subtitle
+// Return: characters per second
+Common.getCpsFromLengthDuration(len, duration);
+
+// Get text stripped from tags.
+// text: subtitle text
+// Return: stripped text
+Common.getStrippedText(text);
+
+// Get text as one line.
+// text: subtitle text
+// Return: one line text
+Common.getOneLineText(text);
+
+// Get an array of lines from text.
+// text: subtitle text
+// Return: array of lines
+Common.getLines(text);
+
+// Check whether a text is a dialog.
+// strippedText: stripped subtitle text
+// Return: true if text is a dialog, false otherwise
+Common.isDialog(strippedText);
+
+// Check whether a text is an end of a sentence.
+// strippedText: stripped subtitle text
+// Return: true if text is an end of a sentence, false otherwise
+Common.isEndOfSentence(strippedText);
+
+// Get pixel width.
+// strippedText: stripped subtitle text
+// font: font used for pixel measurements (default: "Arial,18,1")
+// Return: pixel width
+Common.getPixelWidth(strippedText, font);
+
+// Get a text splitted into two lines (in character length).
+// text: subtitle text
+// maxPerLine: maximum character length per line
+// strictMaxPerLine: strict maximum character length per line
+// lang: language for cut point ("auto" (default), "en", "fr", or "none")
+// Return: text with splitted lines
+Common.getSplittedText(text, maxPerLine, strictMaxPerLine, lang);
+
+// Get a text splitted into two lines (in pixel length).
+// text: subtitle text
+// maxPixelsPerLine: maximum pixel length per line
+// strictMaxPixelsPerLine: strict maximum pixel length per line
+// font: font used for pixel measurements (default: "Arial,18,1")
+// lang: language for cut point ("auto" (default), "en", "fr", or "none")
+// Return: text with splitted lines
+Common.getSplittedTextPixel(text, maxPixelsPerLine, strictMaxPixelsPerLine,
+    font, lang);
+
+// Get a text splitted into two lines (in both character and pixel length).
+// text: subtitle text
+// maxPerLine: maximum character length per line
+// strictMaxPerLine: strict maximum character length per line
+// maxPixelsPerLine: maximum pixel length per line
+// strictMaxPixelsPerLine: strict maximum pixel length per line
+// font: font used for pixel measurements (default: "Arial,18,1")
+// lang: language for cut point ("auto" (default), "en", "fr", or "none")
+// Return: text with splitted lines
+Common.getSplittedTextCharPixel(text, maxPerLine, strictMaxPerLine,
+    maxPixelsPerLine, strictMaxPixelsPerLine, font, lang);
+
+// Get non overlapped start.
+// start: start time
+// previousSub: previous subtitle (null or undefined = ignore)
+// previousScene: previous scene change (-1 = ignore, undefined = any)
+// Return: non overlapped start
+Common.getNonOverlappedStart(start, previousSub, previousScene);
+
+// Get non overlapped stop.
+// stop: stop time
+// nextSub: next subtitle (null or undefined = ignore)
+// nextScene: next scene change (-1 = ignore, undefined = any)
+// Return: non overlapped stop
+Common.getNonOverlappedStop(stop, nextSub, nextScene);
+
+// Perform a formatting operation on a message.
+// message: message to format with named replacement fields ({name})
+// values: object or array of values to be inserted
+// Return: message with replaced fields
+Common.formatMessage(str, values);
+
+// Get number as text.
+// number: number to get as text
+// Return: number as text
+Common.getNumberText(number);
+
+// Get nth as text.
+// number: number to get as nth text
+// Return: number as nth text
+Common.getNthText(number);
+
+// Detect the language.
+// Return: "en" or "fr"
+Common.detectLanguage();
+
+// Get frame duration.
+// Return: frame duration estimated from scene changes, or null
+Common.getFrameDuration();
+
+// Get reading speed from a subtitle.
+// subtitle: subtitle
+// Return: reading speed
+Common.getReadingSpeed(subtitle);
+
+// Get reading speed rating.
+// rs: reading speed
+// Return: reading speed rating
+Common.getReadingSpeedRating(rs);
+
+// Get reading speed as text.
+// subtitle: subtitle
+// Return: reading speed as text
+Common.getReadingSpeedAsText(subtitle);
+
+// Get reading speed as color.
+// subtitle: subtitle
+// Return: reading speed as color
+Common.getReadingSpeedAsColor(subtitle);
+
+// Get reading speed index.
+// rs: reading speed
+// Return: reading speed index
+Common.getReadingSpeedIndex(rs);
+
+// Round a number to one decimal.
+// value: floating point value
+// Return: value rounded to one decimal
+Common.decimal1Round(value);
+
+// Get characters per second from a subtitle.
+// subtitle: subtitle
+// Return: characters per second
+Common.getCharactersPerSecond(subtitle);
+
+// Get characters per second as text.
+// subtitle: subtitle
+// Return: characters per second as text
+Common.getCharactersPerSecondAsText(subtitle);
+
+// ---------------------------------------------------------------------------
+// Variables
+// ---------------------------------------------------------------------------
+
+// Strict minimum reading speed.
+Common.STRICT_MIN_RS;
+
+// Strict maximum reading speed.
+Common.STRICT_MAX_RS;
+
+// Strict minimum characters per second.
+Common.STRICT_MIN_CPS;
+
+// Strict maximum characters per second.
+Common.STRICT_MAX_CPS;
+
+// Newline string.
+Common.NEWLINE;
+
+// Newline pattern.
+Common.NEWLINE_PATTERN;
+
+// Pattern for matching tags.
+Common.TAGS_PATTERN;
+
+// Reading speed definitions.
+Common.READING_SPEED_DEF;
