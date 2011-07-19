@@ -61,7 +61,7 @@ VSSPlugin = {
                     var newStop = Common.getNonOverlappedStop(
                         CurrentSub.Start + minDuration,
                         NextSub, SceneChange.GetNext(CurrentSub.Stop));
-                    if (newStop - 1 <= CurrentSub.Stop) {
+                    if (newStop <= CurrentSub.Stop) {
                         return "";
                     }
                     break;
@@ -71,7 +71,7 @@ VSSPlugin = {
                     var newStop = Common.getNonOverlappedStop(
                         CurrentSub.Start + minDuration,
                         null, SceneChange.GetNext(CurrentSub.Stop));
-                    if (newStop - 1 <= CurrentSub.Stop) {
+                    if (newStop <= CurrentSub.Stop) {
                         return "";
                     }
                     break;
