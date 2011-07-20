@@ -1,0 +1,19 @@
+BUGS
+
+texte de la status bar n'est pas maj qd une jsaction le modifie (mais les colonnes supplémentaires, si)
+
+CHANGES
+
+Fenêtre globale des paramètres, avec paramètres custom typés (bool, string, number) + validation et explications.
+
+réorganisation de la liste des erreurs:
+- possibilité de balancer des messages plus circonstanciés (explication détaillée d'une erreur, avec résultat d'un fix éventuel, le tout en HTML + CSS)
+- possibilité de trier les messages d'erreur du 1er au dernier sous-titre, avec groupage par sous-titre
+
+mode "revue des changements de plan"
+- marquer certains changements de plan comme changement de scène, les montrer en rouge (chevauchement interdit), donner accès à cette propriété dans les plug-ins
+- possibilité de changer la sélection, et d'afficher des frames (avance frame par frame)
+
+possibilité de runner tous les plug-ins juste sur la sélection
+
+fix => re-run checks on current, prev and next + MAJ liste des erreurs
