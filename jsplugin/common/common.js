@@ -694,7 +694,7 @@ getFrameDuration : function() {
         1001 / 30,
         1000 / 30
     ];
-    var votes = [0, 0, 0, 0];
+    var votes = [0, 0, 0, 0, 0];
     var numSamples = 8;
     var count = SceneChange.GetCount();
     var step = Math.round(count / numSamples) || 1;
@@ -725,8 +725,6 @@ getFrameDuration : function() {
         if (vote > max) {
             max = vote;
             picked = i;
-        } else if (vote == max) {
-            return null;
         }
     }
 
