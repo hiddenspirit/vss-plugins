@@ -57,6 +57,30 @@ VSSPlugin = {
         CurrentSub.Stop = stop;
     }
   },
+  
+  // Called after "split at cursor"
+  OnSplitSubtitle : function(CurrentSub, PreviousSub, NextSub) {
+    // Remove dialog markers
+    var text = CurrentSub.Text;
+    var strippedText = CurrentSub.StrippedText;
+    var newText = difflib.updateText(text, strippedText,
+        strippedText.replace(/^[\-–—]\s/mg, ""));
+
+    var lines = Common.getLines(newText);
+
+    if (lines.length > 1) {
+        // Multi-line subtitle
+        var middle = Math.floor(lines.length / 2);
+        CurrentSub.Text = lines.slice(0, middle).join(Common.NEWLINE);
+        NextSub.Text = lines.slice(middle).join(Common.NEWLINE);
+    } else {
+        // Single-line subtitle
+        var words = lines[0].split(" ");
+        var middle = Math.floor(words.length / 2);
+        CurrentSub.Text = words.slice(0, middle).join(" ");
+        NextSub.Text = words.slice(middle).join(" ");
+    }
+  },
 
   // COLUMNS -----------------------------------------------------------------
 
