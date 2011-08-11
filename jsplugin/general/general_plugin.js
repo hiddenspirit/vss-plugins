@@ -68,6 +68,11 @@ VSSPlugin = {
 
     var lines = Common.getLines(newText);
 
+    if (lines.length < 2) {
+        var newText = Common.getSplittedText(text, 37, 40);
+        var lines = Common.getLines(newText);
+    }
+
     if (lines.length > 1) {
         // Multi-line subtitle
         var middle = Math.floor(lines.length / 2);
@@ -79,6 +84,18 @@ VSSPlugin = {
         var middle = Math.floor(words.length / 2);
         CurrentSub.Text = words.slice(0, middle).join(" ");
         NextSub.Text = words.slice(middle).join(" ");
+    }
+    
+    var pos = VSSCore.GetAudioCursorPosition();
+   
+    if (SceneChange.Contains(
+        pos - SceneChange.StopOffset, pos + SceneChange.StartOffset)) {
+        var prevSC = SceneChange.GetPrevious(pos);
+        var nextSC = SceneChange.GetNext(pos);
+        var sc = prevSC < 0 || pos - prevSC > nextSC - pos ? nextSC : prevSC;
+        
+        CurrentSub.Stop = sc - SceneChange.StartOffset;
+        NextSub.Start = sc + SceneChange.StopOffset;
     }
   },
 
