@@ -72,8 +72,9 @@ VSSPlugin = {
         return "";
     }
 
-    var duration = CurrentSub.Stop - CurrentSub.Start;
     var targetDuration = 0;
+	var start = Common.getStartIfOverlapping(CurrentSub);
+    var duration = CurrentSub.Stop - start;
 
     // RS
     if (this.ParamMode.Value != 2) {
@@ -110,14 +111,14 @@ VSSPlugin = {
 
     // Check for optimizable subtitles.
     if (targetDuration) {
-        var newStop = this.GetOptimalStop(targetDuration, CurrentSub, NextSub);
+        var newStop = this.GetOptimalStop(targetDuration, CurrentSub, NextSub, start);
         var diff = newStop - CurrentSub.Stop;
 
         if (diff > 0 && this.ParamOptimize.Value != 2) {
             return Common.formatMessage(this.OptimizableMessage,
                 {valueSeconds: "+" + diff / 1000});
         } else if (diff < 0 && this.ParamOptimize.Value != 1 &&
-            newStop - CurrentSub.Start == targetDuration)
+            newStop - start == targetDuration)
         {
             return Common.formatMessage(this.OptimizableMessage,
                 {valueSeconds: diff / 1000});
@@ -129,10 +130,11 @@ VSSPlugin = {
 
   FixError : function(CurrentSub, PreviousSub, NextSub) {
     var len = CurrentSub.StrippedText.length;
-    var duration = CurrentSub.Stop - CurrentSub.Start;
     var maxDuration = Infinity;
     var minDuration = 0;
     var targetDuration = 0;
+    var start = Common.getStartIfOverlapping(CurrentSub);
+    var duration = CurrentSub.Stop - start;
 
     // RS
     if (this.ParamMode.Value != 2) {
@@ -186,11 +188,11 @@ VSSPlugin = {
 
     // Too low speed.
     if (isFinite(maxDuration)) {
-        CurrentSub.Stop = CurrentSub.Start + maxDuration;
+        CurrentSub.Stop = start + maxDuration;
         return;
     }
 
-    var newStop = this.GetOptimalStop(targetDuration, CurrentSub, NextSub);
+    var newStop = this.GetOptimalStop(targetDuration, CurrentSub, NextSub, start);
 
     if (newStop > CurrentSub.Stop || this.ParamOptimize.Value > 1) {
         CurrentSub.Stop = newStop;
@@ -244,8 +246,11 @@ VSSPlugin = {
     }
   },
 
-  GetOptimalStop : function(targetDuration, CurrentSub, NextSub) {
-    return Common.getNonOverlappedStop(CurrentSub.Start +
+  GetOptimalStop : function(targetDuration, CurrentSub, NextSub, start) {
+	if (undefined === start) {
+		start = CurrentSub.Start;
+	}
+    return Common.getNonOverlappedStop(start +
         Math.min(targetDuration, VSSCore.MaximumDuration),
         NextSub, SceneChange.GetNext(CurrentSub.Stop));
   },

@@ -604,6 +604,25 @@ getNonOverlappedStop : function(stop, nextSub, nextSceneChange) {
     return stop;
 },
 
+// Get the timing when one can really start to read the subtitle,
+// in case of overlapping subtitles.
+getStartIfOverlapping : function(sub) {
+	var prevSub = VSSCore.GetPrevious(sub);
+	if (!prevSub || prevSub.Stop <= sub.Start) {
+		return sub.Start;
+	}
+	// var duration = Math.ceil(Common.getDurationFromLengthRs(
+        // prevSub.StrippedText.length, 34.95));
+    var duration = Common.getIdealDuration(prevSub.StrippedText.length);
+	return Math.min(
+        Math.max(
+            Math.min(
+                Common.getStartIfOverlapping(prevSub) + duration,
+                prevSub.Stop),
+            sub.Start),
+        sub.Stop);
+},
+
 // Perform a formatting operation on a message.
 formatMessage : function(message, values) {
     return message.replace(/{(\w+)}/g, function(s, p) { return values[p]; });
@@ -754,7 +773,7 @@ READING_SPEED_DEF : [
 
 // Get reading speed from a subtitle.
 getReadingSpeed : function(subtitle) {
-    var duration = subtitle.Stop - subtitle.Start;
+    var duration = subtitle.Stop - Common.getStartIfOverlapping(subtitle);
 
     if (duration < 500) {
         return Infinity;
@@ -806,7 +825,7 @@ decimal1Round : function(value) {
 // Get characters per second from a subtitle.
 getCharactersPerSecond : function(subtitle) {
     return subtitle.StrippedText.length * 1000 /
-        (subtitle.Stop - subtitle.Start);
+        (subtitle.Stop - Common.getStartIfOverlapping(subtitle));
 },
 
 // Get characters per second as text.
