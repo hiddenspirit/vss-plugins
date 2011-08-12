@@ -498,6 +498,225 @@ getSplittedTextGeneric : function(text, maxLen, strictMaxLen, getLen,
     return newText;
 },
 
+// New experimental getSplittedText()
+getSplittedText2 : function(text) {
+    var oneLineText = Common.getOneLineText(text);
+    var strippedOneLineText = Common.getStrippedText(oneLineText);
+
+    if (Common.isDialog(strippedOneLineText)) {
+        return oneLineText.replace(/\s+([\-–—])(\s)/g, Common.NEWLINE + "$1$2");
+    }
+
+    var words = strippedOneLineText.split(" ");
+    var numWords = words.length;
+    var getLen = Common.getPixelWidth;
+    var font = undefined;
+    var max = Infinity;
+    var lang = undefined;
+    var safe = undefined;
+    var strippedOneLineTextLen = getLen(strippedOneLineText, font);
+
+    // Abc de, fghij klm.  oneLineText
+    // 0   1   2     3     cutList[].wordIndex
+    // 3   7   13    18    cutList[].first (characters)
+    // 14  10  4     0     cutList[].second (characters)
+    // 45  87  146   194   cutList[].first (pixels)
+    // 149 107 48    0     cutList[].second (pixels)
+
+    var cutListLen = numWords - 1;
+    var cutList = new Array(numWords);
+    var spaceLen = getLen(" ", font);
+    var sumFromStart = getLen(words[0], font);
+    var sumFromEnd = strippedOneLineTextLen - sumFromStart - spaceLen;
+    var getRatio = function(first, second) {
+        return first < second ? first / second : second / first;
+    }
+
+    // Build cut list.
+    cutList[0] = {
+        wordIndex: 0,
+        first: sumFromStart,
+        second: sumFromEnd,
+        ratio: getRatio(sumFromStart, sumFromEnd)
+    };
+
+    for (var i = 1; i < cutListLen; ++i) {
+        sumFromStart += spaceLen + getLen(words[i], font);
+        sumFromEnd = strippedOneLineTextLen - sumFromStart - spaceLen;
+        cutList[i] = {
+            wordIndex: i,
+            first: sumFromStart,
+            second: sumFromEnd,
+            ratio: getRatio(sumFromStart, sumFromEnd)
+        };
+    }
+
+    cutList[i] = {
+        wordIndex: i,
+        first: strippedOneLineTextLen,
+        second: 0,
+        ratio: 0.
+    };
+
+    // Sort cut list from most to least balanced line lengths.
+    cutList.sort(function(a, b) {
+        return b.ratio > a.ratio ? 1 :
+            b.ratio < a.ratio ? -1 :
+            b.wordIndex < a.wordIndex ? 1 : -1;
+    });
+
+    if (Common.DEBUG_LEVEL > 1) {
+        ScriptLog("cutList:");
+
+        for (var i = 0; i < numWords; ++i) {
+            ScriptLog([cutList[i].wordIndex, cutList[i].first,
+                cutList[i].second, cutList[i].ratio].join(", "));
+        }
+    }
+
+    var endWithList = new Array("?!", ":;", ",");
+    var found = false;
+    var minRatio = 0.2;
+    var cutIndex;
+
+    var nonTerminatingWords = Common.NON_TERMINATING_WORDS[lang];
+
+    if (undefined === nonTerminatingWords) {
+        lang = Common.detectLanguage();
+        nonTerminatingWords =  Common.NON_TERMINATING_WORDS[lang];
+    }
+
+    var nonTerminatingWordsDot = Common.NON_TERMINATING_WORDS[lang + "_dot"];
+
+    // Find the best cut point after a dot, taking word list into account.
+    for (cutIndex = 0;
+        cutIndex < cutListLen &&
+        cutList[cutIndex].first <= max &&
+        cutList[cutIndex].second <= max &&
+        cutList[cutIndex].ratio >= minRatio;
+        ++cutIndex)
+    {
+        var strippedWord = words[cutList[cutIndex].wordIndex];
+
+        if (strippedWord.charAt(strippedWord.length - 1) == "." &&
+            nonTerminatingWordsDot.indexOf(strippedWord) < 0) {
+            found = true;
+            break;
+        }
+    }
+
+    // Find the best cut point after a punctuation mark.
+    if (!found) {
+        for (var i = 0, len = endWithList.length; i < len && !found; ++i) {
+            for (cutIndex = 0;
+                cutIndex < cutListLen &&
+                cutList[cutIndex].first <= max &&
+                cutList[cutIndex].second <= max &&
+                cutList[cutIndex].ratio >= minRatio;
+                ++cutIndex)
+            {
+                var strippedWord = words[cutList[cutIndex].wordIndex];
+
+                if (endWithList[i].indexOf(
+                    strippedWord.charAt(strippedWord.length - 1)) >= 0)
+                {
+                    found = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Find another cut point if a good one at a punctuation mark wasn't found.
+    if (!found) {
+        if (safe) {
+            return oneLineText;
+        }
+
+        var strippedWord = words[cutList[0].wordIndex];
+
+        // If needed, try to find another cut point than the most balanced one.
+        if (nonTerminatingWords.indexOf(strippedWord) >= 0) {
+            var found = false;
+            var goodFallback = 0;
+            var badFallback = 0;
+
+            for (cutIndex = 1;
+                cutIndex < cutListLen &&
+                cutList[cutIndex].ratio >= minRatio;
+                ++cutIndex)
+            {
+                var wordIndex = cutList[cutIndex].wordIndex;
+                var firstWord = words[wordIndex];
+
+                if (nonTerminatingWords.indexOf(firstWord) < 0) {
+                    if (cutList[cutIndex].first <= max &&
+                        cutList[cutIndex].second <= max)
+                    {
+                        var secondWord = words[wordIndex + 1];
+
+                        if (nonTerminatingWords.indexOf(secondWord) >= 0) {
+                            found = true;
+                            break;
+                        } else if (!goodFallback) {
+                            goodFallback = cutIndex;
+                        }
+                    } else if (!badFallback) {
+                        badFallback = cutIndex;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            // Fallback to most balanced cut point.
+            if (!found) {
+                cutIndex = goodFallback ? goodFallback :
+                    cutList[badFallback].ratio < cutList[0].ratio ?
+                    0 : badFallback;
+            }
+        } else {
+            cutIndex = 0;
+        }
+
+        // Prevent a bad cut before some punctuation marks,
+        // between two numbers, or between a number and a unit of measurement.
+        if (cutIndex == 0) {
+            while (true) {
+                var firstWord = words[cutList[cutIndex].wordIndex];
+                var secondWord = words[cutList[cutIndex].wordIndex + 1];
+
+                if ("?!;:".indexOf(secondWord.charAt(0)) >= 0 ||
+                    (!isNaN(firstWord) &&
+                    (!isNaN(secondWord) ||
+                    Common.MEASUREMENT_UNITS.indexOf(secondWord) >= 0)))
+                {
+                    cutIndex += (cutIndex + 3 > cutListLen ||
+                        cutList[cutIndex + 1].ratio >
+                        cutList[cutIndex + 2].ratio) ? 1 : 2;
+
+                    if (cutIndex >= cutListLen) {
+                        break;
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+    
+    // Build new text.
+    var splitPos = cutList[cutIndex].wordIndex + 1;
+    var newStrippedText = splitPos < numWords ?
+        words.slice(0, splitPos).join(" ") + Common.NEWLINE +
+        words.slice(splitPos).join(" ") : oneLineText;
+
+    var newText = difflib.updateText(oneLineText,
+        strippedOneLineText, newStrippedText);
+
+    return newText;
+},
+
 // Get non overlapped start.
 getNonOverlappedStart : function(start, previousSub, previousSceneChange) {
     // No overlap on previous subtitle.
