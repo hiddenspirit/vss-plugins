@@ -682,7 +682,7 @@ getSplittedText2 : function(text) {
         // Prevent a bad cut before some punctuation marks,
         // between two numbers, or between a number and a unit of measurement.
         if (cutIndex == 0) {
-            while (true) {
+            while (cutIndex < cutListLen) {
                 var firstWord = words[cutList[cutIndex].wordIndex];
                 var secondWord = words[cutList[cutIndex].wordIndex + 1];
 
@@ -694,10 +694,6 @@ getSplittedText2 : function(text) {
                     cutIndex += (cutIndex + 3 > cutListLen ||
                         cutList[cutIndex + 1].ratio >
                         cutList[cutIndex + 2].ratio) ? 1 : 2;
-
-                    if (cutIndex >= cutListLen) {
-                        break;
-                    }
                 } else {
                     break;
                 }
