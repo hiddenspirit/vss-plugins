@@ -65,7 +65,7 @@ VSSPlugin = {
     var strippedText = CurrentSub.StrippedText;
     var newText = difflib.updateText(text, strippedText,
         strippedText.replace(/^[\-–—]\s/mg, ""));
-
+    
     var lines = Common.getLines(newText);
 
     if (lines.length < 2) {
@@ -76,13 +76,35 @@ VSSPlugin = {
     if (lines.length > 1) {
         // Multi-line subtitle
         var middle = Math.floor(lines.length / 2);
-        CurrentSub.Text = lines.slice(0, middle).join(Common.NEWLINE);
-        NextSub.Text = lines.slice(middle).join(Common.NEWLINE);
+        var text1 = lines.slice(0, middle).join(Common.NEWLINE);
+        var text2 = lines.slice(middle).join(Common.NEWLINE);
     } else {
         // Single-line subtitle
-        CurrentSub.Text = lines[0];
-        NextSub.Text = "";
+        var text1 = lines[0];
+        var text2 = "";
     }
+    
+    // Various fixes
+    var html_tag_re = /^(\{.*?\})*<(\w)>[^]*<\/\2>$/;
+    if (html_tag_re.test(newText)) {
+        var tag = newText.match(html_tag_re)[2];
+        text1 = text1 + "</" + tag + ">";
+        text2 = "<" + tag + ">" + text2;
+    }
+    var ass_tag_re = /^(\{.*?\})*\{\\(\w)1\}[^]*\{\\\2[0]\}$/;
+    if (ass_tag_re.test(newText)) {
+        var tag = newText.match(ass_tag_re)[2];
+        text1 = text1 + "{\\" + tag + "0}";
+        text2 = "{\\" + tag + "1}" + text2;
+    }
+    var ass_pos_re = /^\{\\pos\b.*?\}/;
+    if (ass_pos_re.test(newText)) {
+        var tag = newText.match(ass_pos_re)[0];
+        text2 = tag + text2;
+    }
+
+    CurrentSub.Text = text1;
+    NextSub.Text = text2;
 
     if (SceneChange.Visible) {
         var pos = VSSCore.GetAudioCursorPosition();
