@@ -57,7 +57,7 @@ VSSPlugin = {
         CurrentSub.Stop = stop;
     }
   },
-  
+
   // Called after "split at cursor"
   OnSplitSubtitle : function(CurrentSub, PreviousSub, NextSub) {
     // Remove dialog markers
@@ -85,17 +85,20 @@ VSSPlugin = {
         CurrentSub.Text = words.slice(0, middle).join(" ");
         NextSub.Text = words.slice(middle).join(" ");
     }
-    
-    var pos = VSSCore.GetAudioCursorPosition();
-   
-    if (SceneChange.Contains(
-        pos - SceneChange.StopOffset, pos + SceneChange.StartOffset)) {
-        var prevSC = SceneChange.GetPrevious(pos);
-        var nextSC = SceneChange.GetNext(pos);
-        var sc = prevSC < 0 || pos - prevSC > nextSC - pos ? nextSC : prevSC;
-        
-        CurrentSub.Stop = sc - SceneChange.StartOffset;
-        NextSub.Start = sc + SceneChange.StopOffset;
+
+    if (SceneChange.Visible) {
+        var pos = VSSCore.GetAudioCursorPosition();
+
+        if (SceneChange.Contains(
+            pos - SceneChange.StopOffset, pos + SceneChange.StartOffset)) {
+            var prevSC = SceneChange.GetPrevious(pos);
+            var nextSC = SceneChange.GetNext(pos);
+            var sc = (prevSC < 0 || pos - prevSC > nextSC - pos ?
+                nextSC : prevSC);
+
+            CurrentSub.Stop = sc - SceneChange.StartOffset;
+            NextSub.Start = sc + SceneChange.StopOffset;
+        }
     }
   },
 
@@ -371,7 +374,7 @@ VSSPlugin = {
                     CurrentSub.Stop)/*  + " scStop" */;
             }
         }
-        
+
         return "";
 
       default: return "";
