@@ -69,7 +69,7 @@ VSSPlugin = {
     var lines = Common.getLines(newText);
 
     if (lines.length < 2) {
-        var newText = Common.getSplittedText(text, 37, 40);
+        var newText = Common.getSplittedText2(text);
         var lines = Common.getLines(newText);
     }
 
@@ -80,10 +80,8 @@ VSSPlugin = {
         NextSub.Text = lines.slice(middle).join(Common.NEWLINE);
     } else {
         // Single-line subtitle
-        var words = lines[0].split(" ");
-        var middle = Math.floor(words.length / 2);
-        CurrentSub.Text = words.slice(0, middle).join(" ");
-        NextSub.Text = words.slice(middle).join(" ");
+        CurrentSub.Text = lines[0];
+        NextSub.Text = "";
     }
 
     if (SceneChange.Visible) {
