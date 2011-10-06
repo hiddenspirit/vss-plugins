@@ -648,7 +648,7 @@ VSSPlugin = {
             msg: "Invalid punctuation mark \"..\" (3)",
             replaceby: "$1..." },
 
-        {   re: /\.{4,}(\b|\s)/mg,
+        {   re: /\.{4,}/mg,
             msg: "Too many suspension points",
             replaceby: "... " },
 
