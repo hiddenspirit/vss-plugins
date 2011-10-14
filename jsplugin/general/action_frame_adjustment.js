@@ -10,7 +10,7 @@ LoadScript("../common/common.js");
 JSAction_FrameAdjustment = {
   getFrameTiming : function(timing) {
     var frame = Math.round(timing / this.frameDuration);
-    var frameTiming = Math.round(frame * this.frameDuration);
+    var frameTiming = Math.floor(frame * this.frameDuration);
 
     return this.getSCCorrectedTiming(frameTiming);
   },
@@ -22,19 +22,21 @@ JSAction_FrameAdjustment = {
         ++frame;
     }
 
-    var frameTiming = Math.round((frame - 1) * this.frameDuration);
+    var frameTiming = Math.floor((frame - 1) * this.frameDuration);
 
     return this.getSCCorrectedTiming(frameTiming);
   },
 
   getNextFrameTiming : function(timing) {
     var frame = Math.round(timing / this.frameDuration);
-    var frameTiming = Math.round((frame + 1) * this.frameDuration);
+    var frameTiming = Math.floor((frame + 1) * this.frameDuration);
 
     return this.getSCCorrectedTiming(frameTiming);
   },
 
   getSCCorrectedTiming : function(timing) {
+	return timing;
+
     var frameDuration = this.frameDuration / 2;
     var scPrev = SceneChange.GetPrevious(timing);
 
