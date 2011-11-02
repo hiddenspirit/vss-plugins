@@ -25,8 +25,10 @@ VSSPlugin = {
     "Tolerance (default: 1)" },
 
   // Messages
-  StartMessage : "Start: {value} {unit}",
-  StopMessage : "Stop: {value} {unit}",
+  // StartMessageSub : "Start (sub): {value} {unit}",
+  StopMessageSub : "to next sub: {value} {unit}",
+  StartMessageSC : "to previous SC: {value} {unit}",
+  StopMessageSC : "to next SC: {value} {unit}",
 
   // HasError method called for each subtitle during the error checking
   // If there is an error on CurrentSub
@@ -103,7 +105,7 @@ VSSPlugin = {
         this.BlankToPreviousScene < this.ParamStartRange.Value &&
         this.BlankToPreviousScene > this.ParamTolerance.Value)
     {
-        resultList.push(Common.formatMessage(this.StartMessage,
+        resultList.push(Common.formatMessage(this.StartMessageSC,
             {value: this.BlankToPreviousScene,
             range: this.ParamStartRange.Value,
             unit: this.ParamStartRange.Unit}));
@@ -113,7 +115,7 @@ VSSPlugin = {
         this.BlankToNextScene < this.ParamStopRange.Value &&
         this.BlankToNextScene > this.ParamTolerance.Value)
     {
-        resultList.push(Common.formatMessage(this.StopMessage,
+        resultList.push(Common.formatMessage(this.StopMessageSC,
             {value: this.BlankToNextScene,
             range: this.ParamStopRange.Value,
             unit: this.ParamStopRange.Unit}));
@@ -159,7 +161,7 @@ VSSPlugin = {
         var interval = beforeNextSub - CurrentSub.Stop;
 
         if (interval > this.ParamTolerance.Value) {
-            return Common.formatMessage(this.StopMessage,
+            return Common.formatMessage(this.StopMessageSub,
                 {value: interval,
                 range: this.ParamStopRange.Value,
                 unit: this.ParamStopRange.Unit});
