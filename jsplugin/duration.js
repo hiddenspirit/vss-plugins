@@ -28,6 +28,7 @@ VSSPlugin = {
     "1 = Detect acceptable limits when not next to a subtitle or a scene change (default)\n" +
     "2 = Detect acceptable limits when not next to a scene change\n" +
     "3 = Detect all acceptable limits" },
+  ParamTolerance : { Value : 0, Unit : "ms", Description : "Tolerance" },
 
   // Messages
   TooShortMessage : "< {minSeconds} s",
@@ -61,7 +62,8 @@ VSSPlugin = {
                     var newStop = Common.getNonOverlappedStop(
                         CurrentSub.Start + minDuration,
                         NextSub, SceneChange.GetNext(CurrentSub.Stop));
-                    if (newStop <= CurrentSub.Stop) {
+                    if (newStop <=
+                        CurrentSub.Stop + this.ParamTolerance.Value) {
                         return "";
                     }
                     break;
@@ -71,7 +73,8 @@ VSSPlugin = {
                     var newStop = Common.getNonOverlappedStop(
                         CurrentSub.Start + minDuration,
                         null, SceneChange.GetNext(CurrentSub.Stop));
-                    if (newStop <= CurrentSub.Stop) {
+                    if (newStop <=
+                        CurrentSub.Stop + this.ParamTolerance.Value) {
                         return "";
                     }
                     break;
