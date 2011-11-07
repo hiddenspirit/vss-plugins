@@ -35,7 +35,7 @@ JSAction_FrameAdjustment = {
   },
 
   getSCCorrectedTiming : function(timing) {
-	return timing;
+    return timing;
 
     var frameDuration = this.frameDuration / 2;
     var scPrev = SceneChange.GetPrevious(timing);
@@ -64,6 +64,7 @@ JSAction_FrameAdjustment = {
   },
 
   getNextSubCorrectedTiming : function(timing, nextSub) {
+    return timing;
     var frameDuration = this.frameDuration / 2;
 
     if (nextSub) {
