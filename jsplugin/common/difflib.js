@@ -455,14 +455,14 @@ difflib = {
             case "insert":
                 for (var j = update_opcode[2], k = update_opcode[3];
                     k < update_opcode[4]; ++k) {
-                    new_opcodes.push(["insert", j,  j, k, k + 1]);
+                    new_opcodes.push(["insert", j, j, k, k + 1]);
                 }
                 break;
             case "equal":
                 break;
             default:
                 ScriptLog("Unexpected opcode in difflib.updateText() (1): " +
-                    new_opcode);
+                    update_opcode);
         }
     }
     this.debugLog(new_opcodes);
