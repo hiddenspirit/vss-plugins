@@ -700,7 +700,7 @@ getSplittedText2 : function(text) {
             }
         }
     }
-    
+
     // Build new text.
     var splitPos = cutList[cutIndex].wordIndex + 1;
     var newStrippedText = splitPos < numWords ?
@@ -822,14 +822,14 @@ getNonOverlappedStop : function(stop, nextSub, nextSceneChange) {
 // Get the timing when one can really start to read the subtitle,
 // in case of overlapping subtitles.
 getStartIfOverlapping : function(sub) {
-	var prevSub = VSSCore.GetPrevious(sub);
-	if (!prevSub || prevSub.Stop <= sub.Start) {
-		return sub.Start;
-	}
-	// var duration = Math.ceil(Common.getDurationFromLengthRs(
-        // prevSub.StrippedText.length, 34.95));
-    var duration = Common.getIdealDuration(prevSub.StrippedText.length);
-	return Math.min(
+    var prevSub = VSSCore.GetPrevious(sub);
+    if (!prevSub || prevSub.Stop <= sub.Start) {
+        return sub.Start;
+    }
+    var duration = Math.ceil(Common.getDurationFromLengthRs(
+        prevSub.StrippedText.length, 34.95));
+    //var duration = Common.getIdealDuration(prevSub.StrippedText.length);
+    return Math.min(
         Math.max(
             Math.min(
                 Common.getStartIfOverlapping(prevSub) + duration,
