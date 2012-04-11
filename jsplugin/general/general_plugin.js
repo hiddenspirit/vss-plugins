@@ -23,7 +23,9 @@ VSSPlugin = {
 
   // Called when the selection is doubleclicked at start on the audio display
   OnRangeStartDblClick : function(CurrentSub, PreviousSub, NextSub) {
-    var start = Common.getNonOverlappedStart(CurrentSub.Start, PreviousSub,
+    var frameDuration = Common.getFrameDuration();
+    var start = Common.getNonOverlappedStart(
+        Math.round(CurrentSub.Start - 2 * frameDuration), PreviousSub,
         SceneChange.Visible ? undefined : -1);
 
     if (start != CurrentSub.Start && start < CurrentSub.Stop) {
@@ -35,8 +37,11 @@ VSSPlugin = {
   OnRangeStopDblClick : function(CurrentSub, PreviousSub, NextSub) {
     var len = CurrentSub.StrippedText.length;
     var duration = CurrentSub.Stop - CurrentSub.Start;
+    var frameDuration = Common.getFrameDuration();
     var targetDuration = Common.checkMinMaxDuration(
-        Common.getIdealDuration(len));
+        Math.max(duration + 400,
+                 Math.round(Common.getDurationFromLengthRs(len, 26.95)))
+        );
 
     if (SceneChange.Visible) {
         if (targetDuration < duration) {
@@ -65,7 +70,7 @@ VSSPlugin = {
     var strippedText = CurrentSub.StrippedText;
     var newText = difflib.updateText(text, strippedText,
         strippedText.replace(/^[\-–—]\s/mg, ""));
-    
+
     var lines = Common.getLines(newText);
 
     if (lines.length < 2) {
@@ -83,7 +88,7 @@ VSSPlugin = {
         var text1 = lines[0];
         var text2 = "";
     }
-    
+
     // Various fixes
     var html_tag_re = /^(\{.*?\})*<(\w)>[^]*<\/\2>$/;
     if (html_tag_re.test(newText)) {
