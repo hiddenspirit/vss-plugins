@@ -328,6 +328,8 @@ JSAction_Resync2 = {
                         JSAction_Resync.debugLog("nb"+sub.Index);
                         nextSub.Start = nextStart;
                     }
+                } else if (blank > copiedSub.originalBlank * 2) {
+                    // Don't fix next start.
                 } else {
                     nextSub.Start = sub.Stop + copiedSub.originalBlank;
                 }
@@ -341,6 +343,9 @@ JSAction_Resync2 = {
                     sub.Start - lastOriginalBlank, null,
                     SceneChange.GetNext(prevSub.Stop));
                 if (prevStop > prevSub.Stop) {
+                    if (blank > lastOriginalBlank * 2) {
+                        ScriptLog("#" + prevSub.Index + ": big duration increase (" + ((prevStop - prevSub.Stop) / 1000) +" s)");
+                    }
                     JSAction_Resync.debugLog("pb"+sub.Index);
                     prevSub.Stop = prevStop;
                 }
