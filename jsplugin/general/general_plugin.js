@@ -39,7 +39,7 @@ VSSPlugin = {
     var duration = CurrentSub.Stop - CurrentSub.Start;
     var frameDuration = Common.getFrameDuration();
     var targetDuration = Common.checkMinMaxDuration(
-        Math.max(duration + 400,
+        Math.max(duration + 300,
                  Math.round(Common.getDurationFromLengthRs(len, 26.95)))
         );
 
