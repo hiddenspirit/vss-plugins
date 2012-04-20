@@ -4,10 +4,18 @@ if (VSSCore.GetTextSelectionStart) {
     JSAction_SplitAtCursor = {
       onExecute : function() {
         var selectionStart = VSSCore.GetTextSelectionStart();
+        var selectedSub = VSSCore.GetFirstSelected();
+        if (selectionStart && selectedSub.Text[selectionStart - 1] == " ") {
+            --selectionStart;
+        } else {
+            while (selectionStart < selectedSub.Text.length &&
+                   selectedSub.Text[selectionStart] != " ") {
+                ++selectionStart;
+            }
+        }
         if (selectionStart < 1) {
             return;
         }
-        var selectedSub = VSSCore.GetFirstSelected();
         if (selectedSub.Text.length - selectionStart < 1) {
             return;
         }
