@@ -612,7 +612,7 @@ JSAction_Resync2 = {
     var looseSingles = 0;
     var singles = 0;
     var doubles = 0;
-    
+
     for (var i = 0; i < subs.length; ++i) {
         var sub = subs[i];
 
@@ -650,7 +650,7 @@ JSAction_Resync2 = {
                 var pos = delayedStart - dist;
                 var start = pos - JSAction_Resync2.halfDiffLimit;
                 var stop = pos + JSAction_Resync2.halfDiffLimit;
-                
+
                 if (SceneChange.Contains(start, stop)) {
                     ++looseSingles;
                     var start = pos - JSAction_Resync2.halfFrameDuration;
@@ -696,7 +696,7 @@ JSAction_Resync2 = {
                 var pos = delayedStop + dist;
                 var start = pos - JSAction_Resync2.halfDiffLimit;
                 var stop = pos + JSAction_Resync2.halfDiffLimit;
-                
+
                 if (SceneChange.Contains(start, stop)) {
                     ++looseSingles;
                     var start = pos - JSAction_Resync2.halfFrameDuration;
@@ -708,7 +708,7 @@ JSAction_Resync2 = {
             }
         }
     }
-    
+
     return {looseSingles: looseSingles, singles: singles, doubles: doubles};
   },
 
@@ -896,5 +896,5 @@ VSSCore.RegisterJavascriptAction("JSAction_Resync1",
     "Resync - 1th pass (with source video)", "");
 VSSCore.RegisterJavascriptAction("JSAction_Resync2",
     "Resync - 2nd pass (with destination video)", "");
-VSSCore.RegisterJavascriptAction("JSAction_Resync2EarlyAudio",
-    "Resync - 2nd pass (with destination video) for early audio", "");
+//VSSCore.RegisterJavascriptAction("JSAction_Resync2EarlyAudio",
+    //"Resync - 2nd pass (with destination video) for early audio", "");
