@@ -518,7 +518,7 @@ difflib = {
     // Postprocessing
     text = text.replace(/(<\w[^>]*>)(\s+)/, "$2$1");
     text = text.replace(/(\s+)(<\/[^>]*>)/, "$2$1");
-    //text = text.replace(/(\S)(<\/[^>]*>|\{[^}]*\})(\S+)/, "$1$3$2");
+    text = text.replace(/(\S)(<\/[^>]*>|\{[^}]*\})(\S+)/, "$1$3$2");
 
     return text;
   }

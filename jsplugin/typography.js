@@ -98,7 +98,11 @@ VSSPlugin = {
             }
         },
 
-        {   re: /(\d)h\s/mg,
+        {   re: /\b(\d+)h\b/mg,
+            msg: "'h' (heure) toujours précédé d’une espace",
+            replaceby: "$1 h" },
+
+            {   re: /(\d)h\s/mg,
             msg: "'h' toujours précédé et suivi d’une espace",
             replaceby: "$1 h " },
 
@@ -265,7 +269,7 @@ VSSPlugin = {
 
         {   re: /([^.])\.\.$/mg,
             msg: "Signe de ponctuation invalide \"..\" (3)",
-            replaceby: "$1..." },
+            replaceby: "$1." },
 
         {   re: /\.{4,}/mg,
             msg: "Signe de ponctuation invalide \"....\"",
@@ -646,7 +650,7 @@ VSSPlugin = {
 
         {   re: /([^.])\.\.$/mg,
             msg: "Invalid punctuation mark \"..\" (3)",
-            replaceby: "$1..." },
+            replaceby: "$1." },
 
         {   re: /\.{4,}/mg,
             msg: "Too many suspension points",
