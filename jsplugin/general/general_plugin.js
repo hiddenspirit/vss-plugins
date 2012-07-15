@@ -37,11 +37,9 @@ VSSPlugin = {
   OnRangeStopDblClick : function(CurrentSub, PreviousSub, NextSub) {
     var len = CurrentSub.StrippedText.length;
     var duration = CurrentSub.Stop - CurrentSub.Start;
-    var frameDuration = Common.getFrameDuration();
     var targetDuration = Common.checkMinMaxDuration(
-        Math.max(duration + 300,
-                 Math.round(Common.getDurationFromLengthRs(len, 26.95)))
-        );
+        Common.getTargetDuration(len)
+    );
 
     if (SceneChange.Visible) {
         if (targetDuration < duration) {
@@ -501,7 +499,7 @@ function statusBarText(subtitle) {
 
     // compute Lavie duration
     var ideal = Common.getIdealDuration(len);
-    var idealText = (Common.getIdealDuration(len) / 1000).toFixed(3);
+    var idealText = (ideal / 1000).toFixed(3);
 
     // get display bars
     var rsBar = getRsBar(rs, Common.STRICT_MIN_RS, Common.STRICT_MAX_RS,

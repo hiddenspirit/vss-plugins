@@ -150,6 +150,18 @@ getIdealDuration : function(len) {
     return len * 50 + 500;
 },
 
+// Get target duration.
+getTargetDuration : function(len) {
+    return Math.round(
+        VSSCore.RsTargetIndex !== undefined ?
+        Common.getDurationFromLengthRs(
+            len,
+            [20, 26.95, 30.95, 34.95][VSSCore.RsTargetIndex]
+        ) :
+        Common.getDurationFromLengthCps(len, VSSCore.CpsTarget)
+    );
+},
+
 // Get duration from text length and reading speed.
 getDurationFromLengthRs : function(len, rs) {
     return len * 1000 / rs + 500;
