@@ -85,7 +85,7 @@ VSSPlugin = {
         {
             return Common.getReadingSpeedRating(rs);
         } else if (this.ParamOptimize.Value) {
-            targetDuration = Common.getIdealDuration(len);
+            targetDuration = Common.getTargetDuration(len);
         }
     }
 
@@ -145,7 +145,7 @@ VSSPlugin = {
             maxDuration = Math.floor(
                 Common.getDurationFromLengthRs(len, minRs));
         } else {
-            targetDuration = Common.getIdealDuration(len);
+            targetDuration = Common.getTargetDuration(len);
             var maxRs = Common.getRsFromHighLevel(this.ParamMaxRsLevel.Value);
 
             if (rs >= maxRs) {
