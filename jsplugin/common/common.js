@@ -153,12 +153,11 @@ getIdealDuration : function(len) {
 // Get target duration.
 getTargetDuration : function(len) {
     return Math.round(
-        VSSCore.RsTargetIndex !== undefined ?
         Common.getDurationFromLengthRs(
             len,
-            [20, 26.95, 30.95, 34.95][VSSCore.RsTargetIndex]
-        ) :
-        Common.getDurationFromLengthCps(len, VSSCore.CpsTarget)
+            [20, 26.95, 30.95, 34.95]
+            [VSSCore.RsTargetIndex !== undefined ? VSSCore.RsTargetIndex : 0]
+        )
     );
 },
 
