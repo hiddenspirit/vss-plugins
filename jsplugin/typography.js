@@ -142,9 +142,10 @@ VSSPlugin = {
             msg: "Paradis --> paradis (sauf en début de phrase)",
             replaceby: "$1paradis" },
 
-        {   re: /(\w[\s'’]+)Ciel\b/mg,
-            msg: "Ciel --> ciel (sauf en début de phrase)",
-            replaceby: "$1ciel" },
+        // http://www.larousse.fr/dictionnaires/francais/ciel_cielscieux/15990/difficulte
+        // {   re: /(\w[\s'’]+)Ciel\b/mg,
+            // msg: "Ciel --> ciel (sauf en début de phrase)",
+            // replaceby: "$1ciel" },
 
         {   re: /(votre Majesté)|(Votre majesté)/mg,
             msg: "Casse incorrecte --> Votre Majesté",
