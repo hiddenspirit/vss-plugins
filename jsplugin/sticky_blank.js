@@ -161,6 +161,10 @@ VSSPlugin = {
         var interval = beforeNextSub - CurrentSub.Stop;
 
         if (interval > this.ParamTolerance.Value) {
+            var stop = Common.getNonOverlappedStop(beforeNextSub, NextSub, nextScene);
+            if (stop < beforeNextSub) {
+                return "";
+            }
             return Common.formatMessage(this.StopMessageSub,
                 {value: interval,
                 range: this.ParamStopRange.Value,
