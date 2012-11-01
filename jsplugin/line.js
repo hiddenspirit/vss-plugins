@@ -49,6 +49,12 @@ VSSPlugin = {
     "0 = Off\n" +
     "1 = Detect for incomplete sentences (default)\n" +
     "2 = Detect for all lines" },
+  ParamTwoLinesException : {
+    Value : "\bsous-titres.eu\b",
+    Unit : "regular expression",
+    Description :
+    "Don't trigger a \"no need for two lines\" error " +
+    "if the subtitle matches this expression." },
   ParamDetectBadSplits : { Value : 0, Unit : "(0/1)", Description :
     "Detect line splits that are possibly bad.\n" +
     "0 = Off (default)\n" +
@@ -102,7 +108,9 @@ VSSPlugin = {
         var result = NoNeedForTwoLines[this.ParamMode.Value](
             strippedOneLineText);
 
-        if (result) {
+        if (result && (!this.ParamTwoLinesException.Value.length ||
+                CurrentSub.StrippedText.search(
+                this.ParamTwoLinesException.Value) < 0)) {
             return Common.formatMessage(this.NoNeedForNLinesMessage,
                 {num: Common.getNumberText(numLines),
                 value: result.value, unit: result.unit});
