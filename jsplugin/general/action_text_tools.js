@@ -43,7 +43,7 @@ JSAction_MaskText = {
 
         var c = sub.text.indexOf("{\\*");
         if (c >= 0) {
-            sub.text = sub.text.replace(/^(\{\\pos\(\d+,\d+\)\})?\{\\[\$\*]?(.*?)\}/, "$1$2");
+            sub.text = sub.text.replace(/^(\{\\pos\(\d+,\d+\)\})?\{\\[\$\*]?([^]*?)\}/, "$1$2");
             continue;
         }
 
