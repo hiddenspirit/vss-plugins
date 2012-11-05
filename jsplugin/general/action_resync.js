@@ -289,6 +289,11 @@ JSAction_Resync2 = {
         if (lastIndex) {
             var result = JSAction_Resync2.findBestDelay(
                 subs.slice(firstIndex, lastIndex), minTiming, searchLimit);
+            if (result.matchCount == 0 && minTiming < 0) {
+                minTiming = 0;
+                result = JSAction_Resync2.findBestDelay(
+                    subs.slice(firstIndex, lastIndex), minTiming, searchLimit);
+            }
             JSAction_Resync2.delaySubs(subs, firstIndex, result);
 
             if (result.matchCount) {
