@@ -1,7 +1,7 @@
 _______________________________________________________________________________
 
-   DICTIONNAIRE ORTHOGRAPHIQUE FRANÇAIS «MODERNE»
-   version 4.6
+   DICTIONNAIRES ORTHOGRAPHIQUES FRANÇAIS
+   version 4.8
 
    Olivier R. - dicollecte<at>free<dot>fr
    Dicollecte : http://www.dicollecte.org/
@@ -67,6 +67,6 @@ _______________________________________________________________________________
         Ce dictionnaire ne connaît que les graphies nouvelles des mots concernés
         par la réforme de 1990.
 
-    Dictionnaire «Classique & Réforme 1990»
+    Dictionnaire «Toutes variantes»
         Ce dictionnaire contient les nouvelles et les anciennes graphies des
         mots concernés par la réforme de 1990.
