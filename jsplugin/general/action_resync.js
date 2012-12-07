@@ -10,6 +10,8 @@ LoadScript("../common/common.js");
 
 JSAction_Resync = {
   DEBUG : false,
+  EARLY_AUDIO_FRAMES : 2,
+  LATE_AUDIO_FRAMES : 2,
 
   iterSubs : function(func, firstIndex, lastIndex) {
     if (!lastIndex) {
@@ -841,7 +843,63 @@ JSAction_Resync2EarlyAudio = {
     if (!subs) {
         return;
     }
-    var delay = -2 * JSAction_Resync.frameDuration;
+    var delay = -JSAction_Resync.EARLY_AUDIO_FRAMES * JSAction_Resync.frameDuration;
+    // JSAction_Resync.normalizeTimings();
+
+    JSAction_Resync.iterSubs(function(sub) {
+        if (/^\{\\SC\d*\}/.test(sub.Text)) {
+            sub.Start = JSAction_Resync2.getSCCorrectedStart(sub.Start);
+        } else if (/^\{\\ESC(\d*)\}/.test(sub.Text)) {
+            sub.Start = Common.getNonOverlappedStart(sub.Start + delay,
+                VSSCore.GetPrevious(sub), SceneChange.GetPrevious(sub.Start));
+        } else if (/^\{\\BSC(\d*)\}/.test(sub.Text)) {
+            var prevSC = SceneChange.GetPrevious(sub.Start);
+            if (prevSC >= 0 && prevSC + SceneChange.StopOffset >= sub.Start) {
+                var start = sub.Start + delay;
+                var match = sub.Text.match(/^\{\\BSC(\d*)\}/);
+                var dist = parseInt(match[1]) || 0;
+                var minTiming = prevSC + dist;
+                if (start < minTiming) {
+                    start = minTiming;
+                }
+
+                var prevSub = VSSCore.GetPrevious(sub);
+                if (prevSub) {
+                    var minTiming = prevSub.Stop + VSSCore.MinimumBlank;
+                    if (start < minTiming) {
+                        start = minTiming;
+                    }
+                }
+                sub.Start = start;
+            }
+        } else {
+            sub.Start = Common.getNonOverlappedStart(sub.Start + delay,
+                VSSCore.GetPrevious(sub), -1);
+        }
+        if (/\{\\SC\d*\}$/.test(sub.Text)) {
+            sub.Stop = JSAction_Resync2.getSCCorrectedStop(sub.Stop);
+        } else {
+            sub.Stop = Common.getNonOverlappedStop(sub.Stop + delay, null, -1);
+        }
+    });
+
+    JSAction_Resync2.finalize(subs);
+    // JSAction_Resync.normalizeTimings();
+    ScriptLog("Resync done with audio delay " + Math.round(delay) + " ms");
+  }
+};
+
+JSAction_Resync2LateAudio = {
+  onExecute : function() {
+    if (!SceneChange.GetCount()) {
+        ScriptLog("Error: no scene changes")
+        return;
+    }
+    var subs = JSAction_Resync2.run();
+    if (!subs) {
+        return;
+    }
+    var delay = JSAction_Resync.LATE_AUDIO_FRAMES * JSAction_Resync.frameDuration;
     // JSAction_Resync.normalizeTimings();
 
     JSAction_Resync.iterSubs(function(sub) {
@@ -901,5 +959,7 @@ VSSCore.RegisterJavascriptAction("JSAction_Resync1",
     "Resync - 1th pass (with source video)", "");
 VSSCore.RegisterJavascriptAction("JSAction_Resync2",
     "Resync - 2nd pass (with destination video)", "");
-//VSSCore.RegisterJavascriptAction("JSAction_Resync2EarlyAudio",
-    //"Resync - 2nd pass (with destination video) for early audio", "");
+// VSSCore.RegisterJavascriptAction("JSAction_Resync2EarlyAudio",
+    // "Resync - 2nd pass (with destination video) for early audio", "");
+// VSSCore.RegisterJavascriptAction("JSAction_Resync2LateAudio",
+    // "Resync - 2nd pass (with destination video) for late audio", "");
