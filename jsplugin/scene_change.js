@@ -1,5 +1,6 @@
 ﻿// Scene change plugin by Nathbot
 // Modified by Toff for integration in VSS 0.9.11
+LoadScript("common/common.js");
 
 VSSPlugin = {
   // ----- Plugin constant -----
@@ -7,6 +8,12 @@ VSSPlugin = {
   Description : 'Detect and fix subtitle overlapping on a scene change.',
   Color : 0xffe4db,
   Message : 'Overlap on a scene change',
+  ParamToleranceLevel : { Value : 0, Unit : "(0/1/2)", Description :
+    "Detection level.\n" +
+    "0 = Detect everything.\n" +
+    "1 = Detect Fast, acceptable.\n" +
+    "2 = Detect A bit fast."
+  },
 
   // ----- Plugin parameters available from VSS GUI (name must start with "Param") -----
 
@@ -31,7 +38,13 @@ VSSPlugin = {
     var scTiming1 = SceneChange.GetPrevious(CurrentSub.Start);
     var scEnd1 = scTiming1 + SceneChange.StopOffset;
     if (scTiming1 != -1 && scEnd1 > CurrentSub.Start) {
-      return '1 - overlap on start: ' + (scEnd1 - CurrentSub.Start) + 'ms';
+      var len = CurrentSub.StrippedText.length;
+      var duration = CurrentSub.Stop - scEnd1;
+      var rs = Common.getRsFromLengthDuration(len, duration);
+      var maxRs = Common.getRsFromHighLevel(this.ParamToleranceLevel.Value);
+      if (rs < maxRs) {
+        return '1 - overlap on start: ' + (scEnd1 - CurrentSub.Start) + 'ms';
+      }
     }
 
     // Get the scene change next to the start time
@@ -48,7 +61,13 @@ VSSPlugin = {
     var scTiming3 = SceneChange.GetNext(CurrentSub.Stop);
     var scStart3 = scTiming3 - SceneChange.StartOffset;
     if (scTiming3 != -1 && scStart3 < CurrentSub.Stop) {
-      return '3 - overlap on stop: ' + (CurrentSub.Stop - scStart3) + 'ms';
+      var len = CurrentSub.StrippedText.length;
+      var duration = scStart3 - CurrentSub.Start;
+      var rs = Common.getRsFromLengthDuration(len, duration);
+      var maxRs = Common.getRsFromHighLevel(this.ParamToleranceLevel.Value);
+      if (rs < maxRs) {
+        return '3 - overlap on stop: ' + (CurrentSub.Stop - scStart3) + 'ms';
+      }
     }
 
     // Get the scene change previous to the stop time
