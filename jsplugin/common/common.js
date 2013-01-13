@@ -940,7 +940,7 @@ getFrameDuration : function() {
         1000 / 30
     ];
     var votes = [0, 0, 0, 0, 0];
-    var numSamples = 8;
+    var numSamples = 12;
     var count = SceneChange.GetCount();
     var step = Math.round(count / numSamples) || 1;
 
