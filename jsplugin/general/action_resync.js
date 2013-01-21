@@ -10,8 +10,8 @@ LoadScript("../common/common.js");
 
 JSAction_Resync = {
   DEBUG : false,
-  EARLY_AUDIO_FRAMES : 2,
-  LATE_AUDIO_FRAMES : 2,
+  EARLY_AUDIO_FRAMES : 1,
+  LATE_AUDIO_FRAMES : 1,
 
   iterSubs : function(func, firstIndex, lastIndex) {
     if (!lastIndex) {
@@ -946,6 +946,94 @@ JSAction_Resync2LateAudio = {
 };
 
 
+JSAction_EarlierSync = {
+  onExecute : function() {
+    var delta = Common.getFrameDuration() * 1;
+    JSAction_Resync.iterSubs(function(sub) {
+        nextSub = VSSCore.GetNext(sub);
+        prevSub = VSSCore.GetPrevious(sub);
+        if (
+            sub.StrippedText.length &&
+            sub.StrippedText.toUpperCase() == sub.StrippedText ||
+            /\\fade?\b/.test(sub.Text) || /sous-titres\.eu/.test(sub.Text)
+        ) {
+            return;
+        }
+        var start = sub.Start;
+        var sc = SceneChange.GetPrevious(start);
+        var scBlankPos = sc + SceneChange.StopOffset;
+        if (start > scBlankPos) {
+            start -= delta;
+            if (start < scBlankPos) {
+                start = scBlankPos;
+            }
+        } else if (start < scBlankPos) {
+            start -= delta;
+            if (start < sc) {
+                start = sc;
+            }
+        }
+        if (start != sub.Start) {
+            sub.Start = start;
+        }
+        var stop = sub.Stop;
+        var sc = SceneChange.GetNext(stop);
+        var scBlankPos = sc - SceneChange.StartOffset;
+        if (scBlankPos != stop) {
+            stop -= delta;
+        }
+        if (stop != sub.Stop) {
+            sub.Stop = stop;
+        }
+    });
+  }
+};
+
+
+JSAction_LaterSync = {
+  onExecute : function() {
+    var delta = Common.getFrameDuration() * 1;
+    JSAction_Resync.iterSubs(function(sub) {
+        nextSub = VSSCore.GetNext(sub);
+        prevSub = VSSCore.GetPrevious(sub);
+        if (
+            sub.StrippedText.length &&
+            sub.StrippedText.toUpperCase() == sub.StrippedText ||
+            /\\fade?\b/.test(sub.Text) || /sous-titres\.eu/.test(sub.Text)
+        ) {
+            return;
+        }
+        var start = sub.Start;
+        var sc = SceneChange.GetPrevious(start);
+        var scBlankPos = sc + SceneChange.StopOffset;
+        if (scBlankPos != start) {
+            start += delta;
+        }
+        if (start != sub.Start) {
+            sub.Start = start;
+        }
+        var stop = sub.Stop;
+        var sc = SceneChange.GetNext(stop);
+        var scBlankPos = sc - SceneChange.StartOffset;
+        if (stop < scBlankPos) {
+            stop += delta;
+            if (stop > scBlankPos) {
+                stop = scBlankPos;
+            }
+        } else if (stop > scBlankPos) {
+            stop += delta;
+            if (stop > sc) {
+                stop = sc;
+            }
+        }
+        if (stop != sub.Stop) {
+            sub.Stop = stop;
+        }
+    });
+  }
+};
+
+
 if (JSAction_Resync.DEBUG) {
     JSAction_Resync.debugLog = function(msg) {
         ScriptLog(msg);
@@ -959,7 +1047,12 @@ VSSCore.RegisterJavascriptAction("JSAction_Resync1",
     "Resync - 1th pass (with source video)", "");
 VSSCore.RegisterJavascriptAction("JSAction_Resync2",
     "Resync - 2nd pass (with destination video)", "");
+VSSCore.RegisterJavascriptAction("JSAction_EarlierSync",
+    "Earlier sync", "");
+VSSCore.RegisterJavascriptAction("JSAction_LaterSync",
+    "Later sync", "");
 // VSSCore.RegisterJavascriptAction("JSAction_Resync2EarlyAudio",
     // "Resync - 2nd pass (with destination video) for early audio", "");
 // VSSCore.RegisterJavascriptAction("JSAction_Resync2LateAudio",
     // "Resync - 2nd pass (with destination video) for late audio", "");
+
