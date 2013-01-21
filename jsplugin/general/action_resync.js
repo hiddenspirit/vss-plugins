@@ -10,8 +10,8 @@ LoadScript("../common/common.js");
 
 JSAction_Resync = {
   DEBUG : false,
-  EARLY_AUDIO_FRAMES : 1,
-  LATE_AUDIO_FRAMES : 1,
+  EARLY_AUDIO_FRAMES : 2,
+  LATE_AUDIO_FRAMES : 2,
 
   iterSubs : function(func, firstIndex, lastIndex) {
     if (!lastIndex) {
