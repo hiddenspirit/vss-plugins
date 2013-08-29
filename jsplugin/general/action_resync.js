@@ -961,16 +961,20 @@ JSAction_EarlierSync = {
         }
         var start = sub.Start;
         var sc = SceneChange.GetPrevious(start);
-        var scBlankPos = sc + SceneChange.StopOffset;
-        if (start > scBlankPos) {
+        if (sc < 0) {
             start -= delta;
-            if (start < scBlankPos) {
-                start = scBlankPos;
-            }
-        } else if (start < scBlankPos) {
-            start -= delta;
-            if (start < sc) {
-                start = sc;
+        } else {
+            var scBlankPos = sc + SceneChange.StopOffset;
+            if (start > scBlankPos) {
+                start -= delta;
+                if (start < scBlankPos) {
+                    start = scBlankPos;
+                }
+            } else if (start < scBlankPos) {
+                start -= delta;
+                if (start < sc) {
+                    start = sc;
+                }
             }
         }
         if (start != sub.Start) {
@@ -978,14 +982,18 @@ JSAction_EarlierSync = {
         }
         var stop = sub.Stop;
         var sc = SceneChange.GetNext(stop);
-        var scBlankPos = sc - SceneChange.StartOffset;
-        if (scBlankPos != stop) {
+        if (sc < 0) {
             stop -= delta;
+        } else {
+            var scBlankPos = sc - SceneChange.StartOffset;
+            if (scBlankPos != stop) {
+                stop -= delta;
+            }
         }
         if (stop != sub.Stop) {
             sub.Stop = stop;
         }
-    });
+    }, VSSCore.GetFirstSelected().Index);
   }
 };
 
@@ -1005,31 +1013,39 @@ JSAction_LaterSync = {
         }
         var start = sub.Start;
         var sc = SceneChange.GetPrevious(start);
-        var scBlankPos = sc + SceneChange.StopOffset;
-        if (scBlankPos != start) {
+        if (sc < 0) {
             start += delta;
+        } else {
+            var scBlankPos = sc + SceneChange.StopOffset;
+            if (scBlankPos != start) {
+                start += delta;
+            }
         }
         if (start != sub.Start) {
             sub.Start = start;
         }
         var stop = sub.Stop;
         var sc = SceneChange.GetNext(stop);
-        var scBlankPos = sc - SceneChange.StartOffset;
-        if (stop < scBlankPos) {
+        if (sc < 0) {
             stop += delta;
-            if (stop > scBlankPos) {
-                stop = scBlankPos;
-            }
-        } else if (stop > scBlankPos) {
-            stop += delta;
-            if (stop > sc) {
-                stop = sc;
+        } else {
+            var scBlankPos = sc - SceneChange.StartOffset;
+            if (stop < scBlankPos) {
+                stop += delta;
+                if (stop > scBlankPos) {
+                    stop = scBlankPos;
+                }
+            } else if (stop > scBlankPos) {
+                stop += delta;
+                if (stop > sc) {
+                    stop = sc;
+                }
             }
         }
         if (stop != sub.Stop) {
             sub.Stop = stop;
         }
-    });
+    }, VSSCore.GetFirstSelected().Index);
   }
 };
 
