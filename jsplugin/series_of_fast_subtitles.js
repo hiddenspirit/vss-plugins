@@ -9,8 +9,8 @@ VSSPlugin = {
   Message : 'Series of fast subtitles',
 
   // ----- Plugin parameters available from VSS GUI (name must start with "Param") -----
-  ParamMode : { Value : 1, Unit : '', Description: 'Mode 1: checks only "TOO FAST" subtitles\nMode 2: includes "Fast, acceptable" subtitles\nMode 3: includes "A bit fast" subtitles'},
-  ParamIntervalMax : { Value : 1000, Unit : 'ms', Description: 'The plugin doesn\'t detect any error if the interval between two subtitles is strictly superior to this duration'},
+  ParamMode : { Value : 2, Unit : '', Description: 'Mode 1: checks only "TOO FAST" subtitles\nMode 2: includes "Fast, acceptable" subtitles\nMode 3: includes "A bit fast" subtitles'},
+  ParamIntervalMax : { Value : 500, Unit : 'ms', Description: 'The plugin doesn\'t detect any error if the interval between two subtitles is strictly superior to this duration'},
 
   // ----- HasError method called for each subtitle during the error checking -----
   // If there is an error on CurrentSub return a string containing the error description.
