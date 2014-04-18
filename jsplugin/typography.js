@@ -29,10 +29,6 @@ VSSPlugin = {
     "as an interuption mark in English.\n" +
     "0 = Off (default)\n"+
     "1 = On" },
-  ParamUnicode : { Value : 0, Unit : "(0/1)", Description:
-    "Use characters prefered in the Unicode standard (UTF-8 required).\n" +
-    "0 = Off (default)\n"+
-    "1 = On" },
 
   // We use a table of rules to define the typography.
   // Each rule is defined by those fields:
@@ -54,7 +50,7 @@ VSSPlugin = {
             msg: "Espace manquante avant un symbole monétaire",
             replaceby: "$1 $2",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -62,7 +58,7 @@ VSSPlugin = {
             msg: "Espace insécable manquante avant un symbole monétaire",
             replaceby: "$1\u00a0$2",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -86,7 +82,7 @@ VSSPlugin = {
             msg: "% toujours précédé d’une espace",
             replaceby: "$1 %",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -94,7 +90,7 @@ VSSPlugin = {
             msg: "% toujours précédé d’une espace insécable",
             replaceby: "$1\u00a0%",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -216,7 +212,7 @@ VSSPlugin = {
             msg: "Espace normale avant \"?\", \":\", \";\" ou \"!\"",
             replaceby: "$1 $3",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -224,7 +220,7 @@ VSSPlugin = {
             msg: "Espace fine insécable avant \"?\", \":\", \";\" ou \"!\"",
             replaceby: "$1\u202f$3",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -353,7 +349,7 @@ VSSPlugin = {
             msg: "… --> ... (trois points)",
             replaceby: "...",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -361,7 +357,7 @@ VSSPlugin = {
             msg: "‘ ou ’ (typographique) --> ' (droit)",
             replaceby: "'",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -369,7 +365,7 @@ VSSPlugin = {
             msg: "Guillemets droits",
             replaceby: "\"$1\"",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -377,7 +373,7 @@ VSSPlugin = {
             msg: "Guillemet droit",
             replaceby: "\"",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -385,7 +381,7 @@ VSSPlugin = {
             msg: "Pas d'espaces à l’intérieur de guillemets droits",
             replaceby: "$1\"$2$3$4\"",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             },
             postcondition: function(text) {
                 var count = 0;
@@ -403,7 +399,7 @@ VSSPlugin = {
             msg: "Tiret court pour les dialogues",
             replaceby: "- ",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -411,7 +407,7 @@ VSSPlugin = {
             msg: "Espace fine insécable non permise",
             replaceby: " ",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -419,7 +415,7 @@ VSSPlugin = {
             msg: "Caractère points de suspension",
             replaceby: "…",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -427,7 +423,7 @@ VSSPlugin = {
             msg: "Apostrophe typographique",
             replaceby: "’",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -435,7 +431,7 @@ VSSPlugin = {
             msg: "Guillemets typographiques français",
             replaceby: "«\u202f$1\u202f»",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -443,7 +439,7 @@ VSSPlugin = {
             msg: "Guillemet typographique français",
             replaceby: "«\u202f$1",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -451,7 +447,7 @@ VSSPlugin = {
             msg: "Guillemet typographique français",
             replaceby: "$1\u202f»",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -460,7 +456,7 @@ VSSPlugin = {
             // msg: "Guillemets typographiques anglais",
             // replaceby: "“$1”",
             // precondition: function() {
-                // return VSSPlugin.ParamUnicode.Value == 2;
+                // return VSSCore.IsUnicode == 2;
             // }
         // },
 
@@ -468,7 +464,7 @@ VSSPlugin = {
             // msg: "Guillemet typographique anglais",
             // replaceby: "“$1",
             // precondition: function() {
-                // return VSSPlugin.ParamUnicode.Value == 2;
+                // return VSSCore.IsUnicode == 2;
             // }
         // },
 
@@ -476,7 +472,7 @@ VSSPlugin = {
             // msg: "Guillemet typographique anglais",
             // replaceby: "$1”",
             // precondition: function() {
-                // return VSSPlugin.ParamUnicode.Value == 2;
+                // return VSSCore.IsUnicode == 2;
             // }
         // },
 
@@ -485,7 +481,7 @@ VSSPlugin = {
             msg: "Espace fine insécable avec guillemet typographique français",
             replaceby: "«\u202f$2",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -493,7 +489,7 @@ VSSPlugin = {
             msg: "Espace fine insécable avec guillemet typographique français",
             replaceby: "$1\u202f»",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -501,7 +497,7 @@ VSSPlugin = {
             msg: "Pas d’espace à l’intérieur de guillemets anglais",
             replaceby: "",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -509,7 +505,7 @@ VSSPlugin = {
             // msg: "Tiret cadratin pour les dialogues",
             // replaceby: "—\u00a0",
             // precondition: function() {
-                // return VSSPlugin.ParamUnicode.Value == 1;
+                // return VSSCore.IsUnicode == 1;
             // }
         // },
 
@@ -517,7 +513,7 @@ VSSPlugin = {
             msg: "Tiret demi-cadratin pour les dialogues",
             replaceby: "–\u00a0",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -525,7 +521,7 @@ VSSPlugin = {
             msg: "Espace fine insécable non pertinente",
             replaceby: "$1 $2",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -533,7 +529,7 @@ VSSPlugin = {
             msg: "Espace fine insécable comme séparateur de milliers",
             replaceby: "$1\u202f$2",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         }
 
@@ -583,7 +579,7 @@ VSSPlugin = {
             msg: "Hyphen character for dialogues",
             replaceby: "- ",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -591,7 +587,7 @@ VSSPlugin = {
             msg: "En dash for dialogues",
             replaceby: "–\u00a0",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -599,7 +595,7 @@ VSSPlugin = {
             msg: "Vertical quotes --> curly quotes",
             replaceby: "$1‘$2’$3",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -607,7 +603,7 @@ VSSPlugin = {
             msg: "Curly double quotes --> vertical double quotes",
             replaceby: "\"",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -615,7 +611,7 @@ VSSPlugin = {
             msg: "Vertical double quotes --> curly double quotes",
             replaceby: "$1“$2”",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -623,7 +619,7 @@ VSSPlugin = {
             msg: "No space inside curly double quotes",
             replaceby: "“$1$2$3”",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -661,7 +657,7 @@ VSSPlugin = {
             msg: "One-character suspension points disallowed",
             replaceby: "...",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -669,7 +665,7 @@ VSSPlugin = {
             msg: "One-character suspension points required",
             replaceby: "…",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -717,7 +713,7 @@ VSSPlugin = {
             msg: "Curly quote --> vertical quote",
             replaceby: "'" ,
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -725,7 +721,7 @@ VSSPlugin = {
             msg: "Vertical apostrophe --> curly apostrophe",
             replaceby: "’" ,
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -733,7 +729,7 @@ VSSPlugin = {
             msg: "Vertical double quote --> curly double quote",
             replaceby: "$1“" ,
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -741,7 +737,7 @@ VSSPlugin = {
             msg: "Vertical double quote --> curly double quote",
             replaceby: "”$1" ,
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -749,7 +745,7 @@ VSSPlugin = {
             msg: "No space inside vertical double quotes",
             replaceby: "$1\"$2$3$4\"",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             },
             postcondition: function(text) {
                 var count = 0;
@@ -767,7 +763,7 @@ VSSPlugin = {
             msg: "Guillemets --> double quotes",
             replaceby: "\"$1\"",
             precondition: function() {
-                return !VSSPlugin.ParamUnicode.Value;
+                return !VSSCore.IsUnicode;
             }
         },
 
@@ -775,7 +771,7 @@ VSSPlugin = {
             msg: "Guillemets --> curly double quotes",
             replaceby: "“$1”" ,
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 
@@ -807,7 +803,7 @@ VSSPlugin = {
             msg: "Use em dash",
             replaceby: "—",
             precondition: function() {
-                return VSSPlugin.ParamUnicode.Value;
+                return VSSCore.IsUnicode;
             }
         },
 

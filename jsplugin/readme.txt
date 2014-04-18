@@ -42,6 +42,8 @@ VSSCore.GetTextSelectionStart() : Return the position of the first selected char
 VSSCore.GetTextSelectionLength() : Return the number of characters that are selected.
 VSSCore.GetAudioCursorPosition() : Return the position of the yellow audio cursor in ms.
 
+VSSCore.IsUnicode : Check whether the file is UTF-8.
+
 Subtitle.Index : Index of the subtitle
 Subtitle.Start : Start time in ms of the subtitle
 Subtitle.Stop : Stop time in ms of the subtitle
