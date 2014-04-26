@@ -86,9 +86,9 @@ VSSPlugin = {
             }
         },
 
-        {   re: /(\d)[ \u202f]*%/mg,
-            msg: "% toujours précédé d’une espace insécable",
-            replaceby: "$1\u00a0%",
+        {   re: /(\d)[ \u00a0]*%/mg,
+            msg: "% toujours précédé d’une espace fine insécable",
+            replaceby: "$1\u202f%",
             precondition: function() {
                 return VSSCore.IsUnicode;
             }
@@ -332,9 +332,17 @@ VSSPlugin = {
             msg: "2nd(e)(s) --> 2d(e)(s)",
             replaceby: "2d$1$2" },
 
-        {   re: /(\d)(i?ème|i?eme|è)(s)?/mg,
+        {   re: /(\d)i?[èe]m(e)(s)?/mgi,
             msg: "2ème(s), 3ème(s), etc. --> 2e(s), 3e(s), etc.",
-            replaceby: "$1e$3" },
+            replaceby: "$1$2$3" },
+
+        {   re: /(\d)è/mg,
+            msg: "2è, 3è, etc. --> 2e, 3e, etc.",
+            replaceby: "$1e" },
+
+        {   re: /(\d)È/mg,
+            msg: "2È, 3È, etc. --> 2E, 3E, etc.",
+            replaceby: "$1E" },
 
         {   re: /\betc(\.{2,}|…)/mg,
            msg: "etc... --> etc.",
