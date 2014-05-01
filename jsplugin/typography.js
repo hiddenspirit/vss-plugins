@@ -24,11 +24,6 @@ VSSPlugin = {
     "auto = Autodetect (default)\n" +
     "en = English\n" +
     "fr = French" },
-  ParamTwoConsecutiveHyphens : { Value : 0, Unit : "(0/1)", Description:
-    "Allow \"--\" (two consecutive hyphens) " +
-    "as an interuption mark in English.\n" +
-    "0 = Off (default)\n"+
-    "1 = On" },
 
   // We use a table of rules to define the typography.
   // Each rule is defined by those fields:
@@ -514,7 +509,6 @@ VSSPlugin = {
                 return VSSCore.IsUnicode;
             }
         }
-
     ),
 
 
@@ -786,14 +780,6 @@ VSSPlugin = {
             replaceby: "—",
             precondition: function() {
                 return VSSCore.IsUnicode;
-            }
-        },
-
-        {   re: /--/mg,
-            msg: "Two consecutive hyphens not allowed, use \"...\" instead",
-            replaceby: "...",
-            precondition: function() {
-                return !VSSPlugin.ParamTwoConsecutiveHyphens.Value;
             }
         }
     )
