@@ -131,8 +131,8 @@ VSSPlugin = {
                 msg: "mn --> min",
                 replaceby: "min$1" },
 
-            {   re: /(n)([°º])([^\s]+)/img,
-                msg: "Nº toujours suivi d’une espace",
+            {   re: /(n[ᵒ°º])(s)?(\d+)/img,
+                msg: "Nᵒ toujours suivi d’une espace",
                 replaceby: "$1$2 $3" },
 
             {   re: /[\t\v\f]+/mg,
@@ -449,9 +449,64 @@ VSSPlugin = {
                 // replaceby: "$1$2\u00a0$3"
             // },
             {
-                re: /(n)(°)/img,
-                msg: "Symbole degré utilisé à tort dans « nº »",
-                replaceby: "$1º"
+                re: /(n)([°º])/img,
+                msg: "Symbole degré utilisé à tort dans « nᵒ »",
+                replaceby: "$1ᵒ"
+            },
+            {
+                re: /(n)([ᵒ°º]s)/img,
+                msg: "nᵒˢ",
+                replaceby: "$1ᵒˢ"
+            },
+            {
+                re: /\b(1)er\b/img,
+                msg: "Lettres de l’ordinal en exposant",
+                replaceby: "$1ᵉʳ"
+            },
+            {
+                re: /\b(1)ers\b/img,
+                msg: "Lettres de l’ordinal en exposant",
+                replaceby: "$1ᵉʳˢ"
+            },
+            {
+                re: /\b(1)re\b/img,
+                msg: "Lettres de l’ordinal en exposant",
+                replaceby: "$1ʳᵉ"
+            },
+            {
+                re: /\b(1)res\b/img,
+                msg: "Lettres de l’ordinal en exposant",
+                replaceby: "$1ʳᵉˢ"
+            },
+            {
+                re: /\b(\d+)e\b/img,
+                msg: "Lettres de l’ordinal en exposant",
+                replaceby: "$1ᵉ"
+            },
+            {
+                re: /\b(\d+)es\b/img,
+                msg: "Lettres de l’ordinal en exposant",
+                replaceby: "$1ᵉˢ"
+            },
+            {
+                re: /\b(2)d\b/mg, // on ne change pas « 2D »
+                msg: "Lettres de l’ordinal en exposant",
+                replaceby: "$1ᵈ"
+            },
+            {
+                re: /\b(2)ds\b/img,
+                msg: "Lettres de l’ordinal en exposant",
+                replaceby: "$1ᵈˢ"
+            },
+            {
+                re: /\b(2)de\b/img,
+                msg: "Lettres de l’ordinal en exposant",
+                replaceby: "$1ᵈᵉ"
+            },
+            {
+                re: /\b(2)des\b/img,
+                msg: "Lettres de l’ordinal en exposant",
+                replaceby: "$1ᵈᵉˢ"
             }
         ]
     },
