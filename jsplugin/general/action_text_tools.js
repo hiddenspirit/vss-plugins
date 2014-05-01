@@ -115,13 +115,14 @@ VSSCore.RegisterJavascriptAction("JSAction_ToggleCase", "Toggle case", "Shift+Ct
 
 JSAction_ToggleDialogue = {
   onExecute : function() {
+    var dialogue_marker = VSSCore.IsUnicode ? "–" : "-";
     for (sub = VSSCore.GetFirstSelected(); sub;
         sub = VSSCore.GetNextSelected(sub))
     {
         if (Common.isDialog(sub.StrippedText)) {
             sub.Text = sub.Text.replace(/^(\{\\pos\(.*?\})?[\-–—]\s*/mg, "$1");
         } else if (Common.getLines(sub.Text).length > 1) {
-            sub.Text = sub.Text.replace(/(^|\n)(\{\\pos\(.*?\})?/g, "$1$2- ")
+            sub.Text = sub.Text.replace(/(^|\n)(\{\\pos\(.*?\})?/g, "$1$2" + dialogue_marker + " ")
         }
     }
   }

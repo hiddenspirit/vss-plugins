@@ -131,9 +131,9 @@ VSSPlugin = {
                 msg: "mn --> min",
                 replaceby: "min$1" },
 
-            {   re: /(n)°([^\s]+)/img,
-                msg: "N° toujours suivi d’une espace",
-                replaceby: "$1° $2" },
+            {   re: /(n)([°º])([^\s]+)/img,
+                msg: "Nº toujours suivi d’une espace",
+                replaceby: "$1$2 $3" },
 
             {   re: /[\t\v\f]+/mg,
                 msg: "Caractère d’espacement interdit (Tab, VT, FF)",
@@ -160,11 +160,11 @@ VSSPlugin = {
                 replaceby: " " },
 
             {   re: /([^-])\s+\.(?!\d)/mg,
-                msg: "Pas d’espace avant \".\"",
+                msg: "Pas d’espace avant « . »",
                 replaceby: "$1." },
 
             {   re: /([^-])\s+,/mg,
-                msg: "Pas d’espace avant \",\"",
+                msg: "Pas d’espace avant « , »",
                 replaceby: "$1," },
 
             {   re: /(http:\/\/[^\s\)]+)/mg,
@@ -173,20 +173,16 @@ VSSPlugin = {
                 exception: true },
 
             {   re: /([?!:;]+)(\b)/mg,
-                msg: "Espace après \"?\", \":\", \";\" ou \"!\" (1)",
+                msg: "Espace après « ? », « : », « ; » ou « ! » (1)",
                 replaceby: "$1 $2" },
 
             // {   re: /[\f\t\u2028\u2029]+([?!:;]+)/mg,
                 // msg: "Espace avant \"?\", \":\", \";\" ou \"!\" (2)",
                 // replaceby: " $1" },
 
-            {   re: /^(-)(\S)/mg,
-                msg: "Espace après un \"-\" en début de ligne",
+            {   re: /^([-–—])(\S)/mg,
+                msg: "Espace après un « – » en début de ligne",
                 replaceby: "$1 $2" },
-
-            {   re: /^([—–])(?: |(\S))/mg,
-                msg: "Espace insécable après un \"–\" en début de ligne",
-                replaceby: "$1\u00a0$2" },
 
             {   re: /''/mg,
                 msg: "Double apostrophe",
@@ -205,23 +201,23 @@ VSSPlugin = {
                 replaceby: "$1 \"$2\"" },
 
             {   re: /^\.\.([^.])/mg,
-                msg: "Signe de ponctuation invalide \"..\" (1)",
+                msg: "Signe de ponctuation invalide « .. » (1)",
                 replaceby: "...$1" },
 
             {   re: /([^.])\.\.([^.])/mg,
-                msg: "Signe de ponctuation invalide \"..\" (2)",
+                msg: "Signe de ponctuation invalide « .. » (2)",
                 replaceby: "$1...$2" },
 
             {   re: /([^.])\.\.$/mg,
-                msg: "Signe de ponctuation invalide \"..\" (3)",
+                msg: "Signe de ponctuation invalide « .. » (3)",
                 replaceby: "$1." },
 
             {   re: /\.{4,}/mg,
-                msg: "Signe de ponctuation invalide \"....\"",
+                msg: "Signe de ponctuation invalide « .... »",
                 replaceby: "..." },
 
             {   re: /(\.{3}|…)\b/mg,
-                msg: "Espace après \"...\"",
+                msg: "Espace après « … »",
                 replaceby: "$1 " },
 
             {   re: /(www.[^\s)]+)/mg,
@@ -249,7 +245,7 @@ VSSPlugin = {
                 // exception: true },
 
             {   re: /(.)([.,:])\b(\S+)\b/mg,
-                msg: "Espace après un \".\", \":\" ou \",\"",
+                msg: "Espace après un « . », « : » ou « , »",
                 replaceby: "$1$2 $3",
                 postcondition: function(text) {
                     return !/\.(com|net|org|fr|eu|tv)/.test(text) &&
@@ -257,11 +253,11 @@ VSSPlugin = {
                 } },
 
             {   re: /(\d+)\.(\d{2}\s[$€£¥])/mg,
-                msg: "\",\" pour le séparateur décimal",
+                msg: "« , » pour le séparateur décimal",
                 replaceby: "$1,$2" },
 
             {   re: /--/mg,
-                msg: "Le signe d’interruption doit être \"...\" au lieu de \"--\"",
+                msg: "Le signe d’interruption doit être « ... » au lieu de « -- »",
                 replaceby: "..." },
 
             {   re: /\bMr\.?/mg,
@@ -299,6 +295,9 @@ VSSPlugin = {
             {   re: /\b([A-ZÀ-ÖØ-ÞŒ]{2,})s\b/mg,
                 msg: "sigle ou acronyme invariable",
                 replaceby: "$1" },
+            {   re: /(\d+)(°[CF]|[mcdk]?[gm])/mg,
+                msg: "espace entre un nombre et un symbole de mesure",
+                replaceby: "$1 $2" },
         ],
 
         nonUnicode: [
@@ -314,7 +313,7 @@ VSSPlugin = {
             },
             {
                 re: /([\wÀ-ÖØ-öø-ɏ."'’»])([\u00a0\u202f]*)([?!:;]+)/img,
-                msg: "Espace normale avant \"?\", \"!\", \";\" ou \":\"",
+                msg: "Espace normale avant « ? », « ! », « ; » ou « : »",
                 replaceby: "$1 $3"
             },
             {
@@ -366,22 +365,22 @@ VSSPlugin = {
         unicode: [
             {
                 re: /(\d)[ \u202f]*([\$€£¥])/mg,
-                msg: "Espace insécable manquante avant un symbole monétaire",
+                msg: "Espace insécable avant un symbole monétaire",
                 replaceby: "$1\u00a0$2"
             },
             {
                 re: /(\d)[ \u202f]*%/mg,
-                msg: "% toujours précédé d’une espace insécable",
+                msg: "% précédé d’une espace insécable",
                 replaceby: "$1\u00a0%"
             },
             {
                 re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u00a0]*)([?!;]+)/img,
-                msg: "Espace fine insécable avant \"?\", \"!\" ou \";\"",
+                msg: "Espace fine insécable avant « ? », « ! » ou « ; »",
                 replaceby: "$1\u202f$3"
             },
             {
                 re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u202f]*)(:)/img,
-                msg: "Espace insécable avant \":\"",
+                msg: "Espace insécable avant « : »",
                 replaceby: "$1\u00a0$3"
             },
             {
@@ -438,6 +437,21 @@ VSSPlugin = {
                 re: /(\d) (\d{3})\b/mg,
                 msg: "Espace fine insécable comme séparateur de milliers",
                 replaceby: "$1\u202f$2"
+            },
+            // {
+                // re: /(\d+) (h) (\d+)/img,
+                // msg: "Espaces insécables avant et après le symbole de l’heure",
+                // replaceby: "$1\u00a0$2\u00a0$3"
+            // },
+            // {
+                // re: /(\d+)((?:er|re|e|de?)s?)? ([\wÀ-ÖØ-öø-ɏ°]+)/img,
+                // msg: "Espace insécable entre le nombre et le mot auquel il se rapporte",
+                // replaceby: "$1$2\u00a0$3"
+            // },
+            {
+                re: /(n)(°)/img,
+                msg: "Symbole degré utilisé à tort dans « nº »",
+                replaceby: "$1º"
             }
         ]
     },
@@ -765,9 +779,16 @@ VSSPlugin = {
   // Get rules according to the configured language.
   GetRules : function() {
     var rules = this.Rules[this.ParamLanguage.Value] ||
-        this.Rules[Common.detectLanguage()];
-    return rules["all"].concat(
-        rules[VSSCore.IsUnicode ? "unicode" : "nonUnicode"]);
+                this.Rules[Common.detectLanguage()],
+        result = rules["all"],
+        extraRules = (VSSCore.IsUnicode ?
+                      rules["unicode"] : rules["nonUnicode"]);
+
+    if (extraRules) {
+        result = result.concat(extraRules);
+    }
+
+    return result;
   }
 };
 
