@@ -86,9 +86,9 @@ VSSPlugin = {
             }
         },
 
-        {   re: /(\d)[ \u00a0]*%/mg,
-            msg: "% toujours précédé d’une espace fine insécable",
-            replaceby: "$1\u202f%",
+        {   re: /(\d)[ \u202f]*%/mg,
+            msg: "% toujours précédé d’une espace insécable",
+            replaceby: "$1\u00a0%",
             precondition: function() {
                 return VSSCore.IsUnicode;
             }
@@ -209,16 +209,24 @@ VSSPlugin = {
             exception: true },
 
         {   re: /([\wÀ-ÖØ-öø-ɏ."'’»])([\u00a0\u202f]*)([?!:;]+)/img,
-            msg: "Espace normale avant \"?\", \":\", \";\" ou \"!\"",
+            msg: "Espace normale avant \"?\", \"!\", \";\" ou \":\"",
             replaceby: "$1 $3",
             precondition: function() {
                 return !VSSCore.IsUnicode;
             }
         },
 
-        {   re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u00a0]*)([?!:;]+)/img,
-            msg: "Espace fine insécable avant \"?\", \":\", \";\" ou \"!\"",
+        {   re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u00a0]*)([?!;]+)/img,
+            msg: "Espace fine insécable avant \"?\", \"!\" ou \";\"",
             replaceby: "$1\u202f$3",
+            precondition: function() {
+                return VSSCore.IsUnicode;
+            }
+        },
+
+        {   re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u202f]*)(:)/img,
+            msg: "Espace insécable avant \":\"",
+            replaceby: "$1\u00a0$3",
             precondition: function() {
                 return VSSCore.IsUnicode;
             }
@@ -459,32 +467,6 @@ VSSPlugin = {
             }
         },
 
-
-        // {   re: /["«][\s\u202f]*([^"«»]+?)[\s\u202f]*["»]/mg,
-            // msg: "Guillemets typographiques anglais",
-            // replaceby: "“$1”",
-            // precondition: function() {
-                // return VSSCore.IsUnicode == 2;
-            // }
-        // },
-
-        // {   re: /["«][\s\u202f]*([^"«»]+?)/mg,
-            // msg: "Guillemet typographique anglais",
-            // replaceby: "“$1",
-            // precondition: function() {
-                // return VSSCore.IsUnicode == 2;
-            // }
-        // },
-
-        // {   re: /([^"«»]+?)[\s\u202f]*["»]/mg,
-            // msg: "Guillemet typographique anglais",
-            // replaceby: "$1”",
-            // precondition: function() {
-                // return VSSCore.IsUnicode == 2;
-            // }
-        // },
-
-
         {   re: /«([ \u00a0]*)([\wÀ-ÖØ-öø-ɏ])/img,
             msg: "Espace fine insécable avec guillemet typographique français",
             replaceby: "«\u202f$2",
@@ -509,17 +491,9 @@ VSSPlugin = {
             }
         },
 
-        // {   re: /^[-–]\s+/mg,
-            // msg: "Tiret cadratin pour les dialogues",
-            // replaceby: "—\u00a0",
-            // precondition: function() {
-                // return VSSCore.IsUnicode == 1;
-            // }
-        // },
-
         {   re: /^[-—]\s+/mg,
             msg: "Tiret demi-cadratin pour les dialogues",
-            replaceby: "–\u00a0",
+            replaceby: "– ",
             precondition: function() {
                 return VSSCore.IsUnicode;
             }
