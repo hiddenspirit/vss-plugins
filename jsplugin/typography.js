@@ -25,6 +25,16 @@ VSSPlugin = {
     "en = English\n" +
     "fr = French" },
 
+  ParamUseNarrowNoBreakSpace : { Value : 0, Unit : "(0/1)", Description :
+    "Use narrow no-break space character (French – Unicode).\n" +
+    "0 = Disabled (default)\n" +
+    "1 = Enabled" },
+
+  ParamUseSuperscripts : { Value : 0, Unit : "(0/1)", Description :
+    "Use subscript characters (French – Unicode).\n" +
+    "0 = Disabled (default)\n" +
+    "1 = Enabled (not recommended)" },
+
   // We use a table of rules to define the typography.
   // Each rule is defined by those fields:
   // - re: a regular expression
@@ -34,7 +44,7 @@ VSSPlugin = {
   //   this rule and no replacement will be made (msg can be used for debugging)
   // - precondition (optional): a function that works as a pre-condition,
   //   returning true to check the rule, or false to skip it
-  // - postcondition (optional): a function that works as a post-condition,
+  // - postcondition(text) (optional): a function that works as a post-condition,
   //   returning true to confirm the rule, or false to cancel it
   Rules : {
     // upper_patern : /[A-ZÀ-ÖØ-ÞŒ]/,
@@ -43,19 +53,19 @@ VSSPlugin = {
     "fr" : {
         all: [
             {   re: /(…|\.\.\.)\?/mg,
-                msg: "Espace manquante : …? --> ... ?",
+                msg: "Espace manquante : …? --> … ?",
                 replaceby: "... ?" },
 
             {   re: /(…|\.\.\.)\!/mg,
-                msg: "Espace manquante : …! --> ... !",
+                msg: "Espace manquante : …! --> … !",
                 replaceby: "... !" },
 
             {   re: /\? (…|\.\.\.)/mg,
-                msg: "Espace en trop : ? … --> ?...",
+                msg: "Espace en trop : ? … --> ?…",
                 replaceby: "?..." },
 
             {   re: /\!\s(…|\.\.\.)/mg,
-                msg: "Espace en trop : ! … --> !...",
+                msg: "Espace en trop : ! … --> !…",
                 replaceby: "!..." },
 
             {   re: /\b(\d+)h\b/mg,
@@ -257,7 +267,7 @@ VSSPlugin = {
                 replaceby: "$1,$2" },
 
             {   re: /--/mg,
-                msg: "Le signe d’interruption doit être « ... » au lieu de « -- »",
+                msg: "Le signe d’interruption doit être « … » au lieu de « -- »",
                 replaceby: "..." },
 
             {   re: /\bMr\.?/mg,
@@ -289,7 +299,7 @@ VSSPlugin = {
                 replaceby: "$1E" },
 
             {   re: /\betc(\.{2,}|…)/mg,
-                msg: "etc... --> etc.",
+                msg: "etc… --> etc.",
                 replaceby: "etc." },
 
             {   re: /\b([A-ZÀ-ÖØ-ÞŒ]{2,})s\b/mg,
@@ -376,13 +386,24 @@ VSSPlugin = {
             {
                 re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u00a0]*)([?!;]+)/img,
                 msg: "Espace fine insécable avant « ? », « ! » ou « ; »",
-                replaceby: "$1\u202f$3"
+                replaceby: "$1\u202f$3",
+                precondition: function() {
+                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
             },
             {
-                re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u202f]*)(:)/img,
-                msg: "Espace insécable avant « : »",
-                replaceby: "$1\u00a0$3"
+                re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([\u202f]*)([?!;]+)/img,
+                msg: "Espace insécable avant « ? », « ! » ou « ; »",
+                replaceby: "$1\u00a0$3",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
             },
+            // {
+                // re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u202f]*)(:)/img,
+                // msg: "Espace insécable avant « : »",
+                // replaceby: "$1\u00a0$3"
+            // },
             {
                 re: /\.\.\./mg,
                 msg: "Caractère points de suspension",
@@ -396,27 +417,82 @@ VSSPlugin = {
             {
                 re: /["“]\s*([^"“”]+?)\s*["”]/mg,
                 msg: "Guillemets typographiques français",
-                replaceby: "«\u202f$1\u202f»"
+                replaceby: "«\u202f$1\u202f»",
+                precondition: function() {
+                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
             },
             {
                 re: /["“]\s*([^"“”]+?)/mg,
                 msg: "Guillemet typographique français",
-                replaceby: "«\u202f$1"
+                replaceby: "«\u202f$1",
+                precondition: function() {
+                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
             },
             {
                 re: /([^"“”]+?)\s*["”]/mg,
                 msg: "Guillemet typographique français",
-                replaceby: "$1\u202f»"
+                replaceby: "$1\u202f»",
+                precondition: function() {
+                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
             },
             {
                 re: /«([ \u00a0]*)([\wÀ-ÖØ-öø-ɏ])/img,
                 msg: "Espace fine insécable avec guillemet typographique français",
-                replaceby: "«\u202f$2"
+                replaceby: "«\u202f$2",
+                precondition: function() {
+                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
             },
             {
                 re: /([\wÀ-ÖØ-öø-ɏ.:,;?!…])([ \u00a0]*)»/img,
                 msg: "Espace fine insécable avec guillemet typographique français",
-                replaceby: "$1\u202f»"
+                replaceby: "$1\u202f»",
+                precondition: function() {
+                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
+            },
+            {
+                re: /["“]\s*([^"“”]+?)\s*["”]/mg,
+                msg: "Guillemets typographiques français",
+                replaceby: "«\u00a0$1\u00a0»",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
+            },
+            {
+                re: /["“]\s*([^"“”]+?)/mg,
+                msg: "Guillemet typographique français",
+                replaceby: "«\u00a0$1",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
+            },
+            {
+                re: /([^"“”]+?)\s*["”]/mg,
+                msg: "Guillemet typographique français",
+                replaceby: "$1\u00a0»",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
+            },
+            {
+                re: /«([\u202f]*)([\wÀ-ÖØ-öø-ɏ])/img,
+                msg: "Espace insécable avec guillemet typographique français",
+                replaceby: "«\u00a0$2",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
+            },
+            {
+                re: /([\wÀ-ÖØ-öø-ɏ.:,;?!…])([\u202f]*)»/img,
+                msg: "Espace insécable avec guillemet typographique français",
+                replaceby: "$1\u00a0»",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
             },
             {
                 re: /“(\s)|(\s)”/mg,
@@ -436,7 +512,10 @@ VSSPlugin = {
             {
                 re: /(\d) (\d{3})\b/mg,
                 msg: "Espace fine insécable comme séparateur de milliers",
-                replaceby: "$1\u202f$2"
+                replaceby: "$1\u202f$2",
+                precondition: function() {
+                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
+                }
             },
             // {
                 // re: /(\d+) (h) (\d+)/img,
@@ -449,64 +528,140 @@ VSSPlugin = {
                 // replaceby: "$1$2\u00a0$3"
             // },
             {
-                re: /(n)([°º])/img,
+                re: /\b(n)([°º])/img,
                 msg: "Symbole degré utilisé à tort dans « nᵒ »",
-                replaceby: "$1ᵒ"
+                replaceby: "$1ᵒ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
-                re: /(n)([ᵒ°º]s)/img,
+                re: /\b(n)([ᵒ°º]s)/img,
                 msg: "nᵒˢ",
-                replaceby: "$1ᵒˢ"
+                replaceby: "$1ᵒˢ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
+            },
+            {
+                re: /\b(n)(ᵒˢ?)/img,
+                msg: "Utiliser le symbole degré dans « nᵒ »",
+                replaceby: "$1°",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
                 re: /\b(1)er\b/img,
                 msg: "Lettres de l’ordinal en exposant",
-                replaceby: "$1ᵉʳ"
+                replaceby: "$1ᵉʳ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
                 re: /\b(1)ers\b/img,
                 msg: "Lettres de l’ordinal en exposant",
-                replaceby: "$1ᵉʳˢ"
+                replaceby: "$1ᵉʳˢ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
                 re: /\b(1)re\b/img,
                 msg: "Lettres de l’ordinal en exposant",
-                replaceby: "$1ʳᵉ"
+                replaceby: "$1ʳᵉ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
                 re: /\b(1)res\b/img,
                 msg: "Lettres de l’ordinal en exposant",
-                replaceby: "$1ʳᵉˢ"
+                replaceby: "$1ʳᵉˢ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
                 re: /\b(\d+)e\b/img,
                 msg: "Lettres de l’ordinal en exposant",
-                replaceby: "$1ᵉ"
+                replaceby: "$1ᵉ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
                 re: /\b(\d+)es\b/img,
                 msg: "Lettres de l’ordinal en exposant",
-                replaceby: "$1ᵉˢ"
+                replaceby: "$1ᵉˢ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
                 re: /\b(2)d\b/mg, // on ne change pas « 2D »
                 msg: "Lettres de l’ordinal en exposant",
-                replaceby: "$1ᵈ"
+                replaceby: "$1ᵈ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
                 re: /\b(2)ds\b/img,
                 msg: "Lettres de l’ordinal en exposant",
-                replaceby: "$1ᵈˢ"
+                replaceby: "$1ᵈˢ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
                 re: /\b(2)de\b/img,
                 msg: "Lettres de l’ordinal en exposant",
-                replaceby: "$1ᵈᵉ"
+                replaceby: "$1ᵈᵉ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
             },
             {
                 re: /\b(2)des\b/img,
                 msg: "Lettres de l’ordinal en exposant",
-                replaceby: "$1ᵈᵉˢ"
+                replaceby: "$1ᵈᵉˢ",
+                precondition: function() {
+                    return VSSPlugin.ParamUseSuperscripts.Value;
+                }
+            },
+            {
+                re: /ᵈ/mg,
+                msg: "Ne pas utiliser de caractère en exposant",
+                replaceby: "d",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseSuperscripts.Value;
+                }
+            },
+            {
+                re: /ᵉ/mg,
+                msg: "Ne pas utiliser de caractère en exposant",
+                replaceby: "e",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseSuperscripts.Value;
+                }
+            },
+            {
+                re: /ʳ/mg,
+                msg: "Ne pas utiliser de caractère en exposant",
+                replaceby: "r",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseSuperscripts.Value;
+                }
+            },
+            {
+                re: /ˢ/mg,
+                msg: "Ne pas utiliser de caractère en exposant",
+                replaceby: "s",
+                precondition: function() {
+                    return !VSSPlugin.ParamUseSuperscripts.Value;
+                }
             }
         ]
     },
