@@ -30,7 +30,7 @@ VSSPlugin = {
     "0 = Disabled (default)\n" +
     "1 = Enabled" },
 
-  ParamUseSuperscripts : { Value : 0, Unit : "(0/1)", Description :
+  UseSuperscripts : { Value : 0, Unit : "(0/1)", Description :
     "Use subscript characters (French – Unicode).\n" +
     "0 = Disabled (default)\n" +
     "1 = Enabled (not recommended)" },
@@ -532,7 +532,7 @@ VSSPlugin = {
                 msg: "Symbole degré utilisé à tort dans « nᵒ »",
                 replaceby: "$1ᵒ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -540,7 +540,7 @@ VSSPlugin = {
                 msg: "nᵒˢ",
                 replaceby: "$1ᵒˢ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -548,7 +548,7 @@ VSSPlugin = {
                 msg: "Utiliser le symbole degré dans « nᵒ »",
                 replaceby: "$1°",
                 precondition: function() {
-                    return !VSSPlugin.ParamUseSuperscripts.Value;
+                    return !VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -556,7 +556,7 @@ VSSPlugin = {
                 msg: "Lettres de l’ordinal en exposant",
                 replaceby: "$1ᵉʳ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -564,7 +564,7 @@ VSSPlugin = {
                 msg: "Lettres de l’ordinal en exposant",
                 replaceby: "$1ᵉʳˢ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -572,7 +572,7 @@ VSSPlugin = {
                 msg: "Lettres de l’ordinal en exposant",
                 replaceby: "$1ʳᵉ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -580,7 +580,7 @@ VSSPlugin = {
                 msg: "Lettres de l’ordinal en exposant",
                 replaceby: "$1ʳᵉˢ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -588,7 +588,7 @@ VSSPlugin = {
                 msg: "Lettres de l’ordinal en exposant",
                 replaceby: "$1ᵉ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -596,7 +596,7 @@ VSSPlugin = {
                 msg: "Lettres de l’ordinal en exposant",
                 replaceby: "$1ᵉˢ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -604,7 +604,7 @@ VSSPlugin = {
                 msg: "Lettres de l’ordinal en exposant",
                 replaceby: "$1ᵈ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -612,7 +612,7 @@ VSSPlugin = {
                 msg: "Lettres de l’ordinal en exposant",
                 replaceby: "$1ᵈˢ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -620,7 +620,7 @@ VSSPlugin = {
                 msg: "Lettres de l’ordinal en exposant",
                 replaceby: "$1ᵈᵉ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -628,7 +628,7 @@ VSSPlugin = {
                 msg: "Lettres de l’ordinal en exposant",
                 replaceby: "$1ᵈᵉˢ",
                 precondition: function() {
-                    return VSSPlugin.ParamUseSuperscripts.Value;
+                    return VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -636,7 +636,7 @@ VSSPlugin = {
                 msg: "Ne pas utiliser de caractère en exposant",
                 replaceby: "d",
                 precondition: function() {
-                    return !VSSPlugin.ParamUseSuperscripts.Value;
+                    return !VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -644,7 +644,7 @@ VSSPlugin = {
                 msg: "Ne pas utiliser de caractère en exposant",
                 replaceby: "e",
                 precondition: function() {
-                    return !VSSPlugin.ParamUseSuperscripts.Value;
+                    return !VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -652,7 +652,7 @@ VSSPlugin = {
                 msg: "Ne pas utiliser de caractère en exposant",
                 replaceby: "r",
                 precondition: function() {
-                    return !VSSPlugin.ParamUseSuperscripts.Value;
+                    return !VSSPlugin.UseSuperscripts.Value;
                 }
             },
             {
@@ -660,7 +660,7 @@ VSSPlugin = {
                 msg: "Ne pas utiliser de caractère en exposant",
                 replaceby: "s",
                 precondition: function() {
-                    return !VSSPlugin.ParamUseSuperscripts.Value;
+                    return !VSSPlugin.UseSuperscripts.Value;
                 }
             }
         ]
