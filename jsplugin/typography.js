@@ -25,11 +25,6 @@ VSSPlugin = {
     "en = English\n" +
     "fr = French" },
 
-  ParamUseNarrowNoBreakSpace : { Value : 0, Unit : "(0/1)", Description :
-    "Use narrow no-break space character (French – Unicode).\n" +
-    "0 = Disabled (default)\n" +
-    "1 = Enabled" },
-
   UseSuperscripts : { Value : 0, Unit : "(0/1)", Description :
     "Use subscript characters (French – Unicode).\n" +
     "0 = Disabled (default)\n" +
@@ -374,36 +369,29 @@ VSSPlugin = {
 
         unicode: [
             {
-                re: /(\d)[ \u202f]*([\$€£¥])/mg,
-                msg: "Espace insécable avant un symbole monétaire",
-                replaceby: "$1\u00a0$2"
+                // Devrait utiliser : espace insécable
+                re: /(\d)[\u00a0\u202f]*([\$€£¥])/mg,
+                msg: "Espace avant un symbole monétaire",
+                replaceby: "$1 $2"
             },
             {
-                re: /(\d)[ \u202f]*%/mg,
-                msg: "% précédé d’une espace insécable",
-                replaceby: "$1\u00a0%"
+                // Devrait utiliser : espace insécable
+                re: /(\d)[\u00a0\u202f]*%/mg,
+                msg: "% précédé d’une espace",
+                replaceby: "$1 %"
             },
             {
-                re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u00a0]*)([?!;]+)/img,
-                msg: "Espace fine insécable avant « ? », « ! » ou « ; »",
-                replaceby: "$1\u202f$3",
-                precondition: function() {
-                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
+                // Devrait utiliser : espace fine insécable
+                re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([\u00a0\u202f]*)([?!;]+)/img,
+                msg: "Espace avant « ? », « ! » ou « ; »",
+                replaceby: "$1 $3"
             },
             {
-                re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([\u202f]*)([?!;]+)/img,
-                msg: "Espace insécable avant « ? », « ! » ou « ; »",
-                replaceby: "$1\u00a0$3",
-                precondition: function() {
-                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
+                // Devrait utiliser : espace insécable
+                re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([\u00a0\u202f]*)(:)/img,
+                msg: "Espace avant « : »",
+                replaceby: "$1 $3"
             },
-            // {
-                // re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u202f]*)(:)/img,
-                // msg: "Espace insécable avant « : »",
-                // replaceby: "$1\u00a0$3"
-            // },
             {
                 re: /\.\.\./mg,
                 msg: "Caractère points de suspension",
@@ -415,84 +403,34 @@ VSSPlugin = {
                 replaceby: "’"
             },
             {
+                // Devrait utiliser : espace fine insécable
                 re: /["“]\s*([^"“”]+?)\s*["”]/mg,
                 msg: "Guillemets typographiques français",
-                replaceby: "«\u202f$1\u202f»",
-                precondition: function() {
-                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
+                replaceby: "« $1 »"
             },
             {
+                // Devrait utiliser : espace fine insécable
                 re: /["“]\s*([^"“”]+?)/mg,
                 msg: "Guillemet typographique français",
-                replaceby: "«\u202f$1",
-                precondition: function() {
-                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
+                replaceby: "« $1"
             },
             {
+                // Devrait utiliser : espace fine insécable
                 re: /([^"“”]+?)\s*["”]/mg,
                 msg: "Guillemet typographique français",
-                replaceby: "$1\u202f»",
-                precondition: function() {
-                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
+                replaceby: "$1 »"
             },
             {
-                re: /«([ \u00a0]*)([\wÀ-ÖØ-öø-ɏ])/img,
-                msg: "Espace fine insécable avec guillemet typographique français",
-                replaceby: "«\u202f$2",
-                precondition: function() {
-                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
+                // Devrait utiliser : espace fine insécable
+                re: /«([\u00a0\u202f]*)([\wÀ-ÖØ-öø-ɏ])/img,
+                msg: "Espace avec guillemet typographique français",
+                replaceby: "« $2"
             },
             {
-                re: /([\wÀ-ÖØ-öø-ɏ.:,;?!…])([ \u00a0]*)»/img,
-                msg: "Espace fine insécable avec guillemet typographique français",
-                replaceby: "$1\u202f»",
-                precondition: function() {
-                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
-            },
-            {
-                re: /["“]\s*([^"“”]+?)\s*["”]/mg,
-                msg: "Guillemets typographiques français",
-                replaceby: "«\u00a0$1\u00a0»",
-                precondition: function() {
-                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
-            },
-            {
-                re: /["“]\s*([^"“”]+?)/mg,
-                msg: "Guillemet typographique français",
-                replaceby: "«\u00a0$1",
-                precondition: function() {
-                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
-            },
-            {
-                re: /([^"“”]+?)\s*["”]/mg,
-                msg: "Guillemet typographique français",
-                replaceby: "$1\u00a0»",
-                precondition: function() {
-                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
-            },
-            {
-                re: /«([\u202f]*)([\wÀ-ÖØ-öø-ɏ])/img,
-                msg: "Espace insécable avec guillemet typographique français",
-                replaceby: "«\u00a0$2",
-                precondition: function() {
-                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
-            },
-            {
-                re: /([\wÀ-ÖØ-öø-ɏ.:,;?!…])([\u202f]*)»/img,
-                msg: "Espace insécable avec guillemet typographique français",
-                replaceby: "$1\u00a0»",
-                precondition: function() {
-                    return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
+                // Devrait utiliser : espace fine insécable
+                re: /([\wÀ-ÖØ-öø-ɏ.:,;?!…])([\u00a0\u202f]*)»/img,
+                msg: "Espace avec guillemet typographique français",
+                replaceby: "$1 »"
             },
             {
                 re: /“(\s)|(\s)”/mg,
@@ -510,12 +448,10 @@ VSSPlugin = {
                 replaceby: "$1 $2"
             },
             {
-                re: /(\d) (\d{3})\b/mg,
-                msg: "Espace fine insécable comme séparateur de milliers",
-                replaceby: "$1\u202f$2",
-                precondition: function() {
-                    return VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
-                }
+                // Devrait utiliser : espace fine insécable
+                re: /(\d)[\u00a0\u202f]*(\d{3})\b/mg,
+                msg: "Espace comme séparateur de milliers",
+                replaceby: "$1 $2"
             },
             // {
                 // re: /(\d+) (h) (\d+)/img,
