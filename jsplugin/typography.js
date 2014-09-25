@@ -392,7 +392,7 @@ VSSPlugin = {
                 }
             },
             {
-                re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([\u202f]*)([?!;]+)/img,
+                re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u202f]*)([?!;]+)/img,
                 msg: "Espace insécable avant « ? », « ! » ou « ; »",
                 replaceby: "$1\u00a0$3",
                 precondition: function() {
