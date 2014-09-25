@@ -399,11 +399,11 @@ VSSPlugin = {
                     return !VSSPlugin.ParamUseNarrowNoBreakSpace.Value;
                 }
             },
-            // {
-                // re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u202f]*)(:)/img,
-                // msg: "Espace insécable avant « : »",
-                // replaceby: "$1\u00a0$3"
-            // },
+            {
+                re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([ \u202f]*)(:)/img,
+                msg: "Espace insécable avant « : »",
+                replaceby: "$1\u00a0$3"
+            },
             {
                 re: /\.\.\./mg,
                 msg: "Caractère points de suspension",
@@ -479,7 +479,7 @@ VSSPlugin = {
                 }
             },
             {
-                re: /«([\u202f]*)([\wÀ-ÖØ-öø-ɏ])/img,
+                re: /«([ \u202f]*)([\wÀ-ÖØ-öø-ɏ])/img,
                 msg: "Espace insécable avec guillemet typographique français",
                 replaceby: "«\u00a0$2",
                 precondition: function() {
@@ -487,7 +487,7 @@ VSSPlugin = {
                 }
             },
             {
-                re: /([\wÀ-ÖØ-öø-ɏ.:,;?!…])([\u202f]*)»/img,
+                re: /([\wÀ-ÖØ-öø-ɏ.:,;?!…])([ \u202f]*)»/img,
                 msg: "Espace insécable avec guillemet typographique français",
                 replaceby: "$1\u00a0»",
                 precondition: function() {
