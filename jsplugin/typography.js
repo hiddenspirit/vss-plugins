@@ -881,9 +881,9 @@ VSSPlugin = {
                 replaceby: "$1“"
             },
             {
-                re: /"($|\s)/mg,
+                re: /"/mg,
                 msg: "Vertical double quote --> curly double quote",
-                replaceby: "”$1"
+                replaceby: "”"
             },
             {
                 re: /«[\s\u202f]*([^]*?)[\s\u202f]*»/mg,
