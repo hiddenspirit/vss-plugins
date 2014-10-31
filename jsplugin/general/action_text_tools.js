@@ -129,3 +129,30 @@ JSAction_ToggleDialogue = {
 };
 
 VSSCore.RegisterJavascriptAction("JSAction_ToggleDialogue", "Toggle dialogue", "Shift+Ctrl+D");
+
+
+// ---------------------------------------------------------------------------
+
+// Action One Line Text plugin for VisualSubSync
+// Spirit <hiddenspirit (at) gmail.com>
+//
+
+JSAction_OneLineText = {
+    onExecute : function() {
+        this.iterTexts(function(text, strippedText) {
+            return Common.getOneLineText(text);
+        });
+    },
+
+    iterTexts : function(newTextFunc) {
+        for (var sub = VSSCore.GetFirstSelected(); sub;
+             sub = VSSCore.GetNextSelected(sub)) {
+            var newText = newTextFunc(sub.Text, sub.StrippedText);
+            if (newText != sub.Text) {
+                sub.Text = newText;
+            }
+        }
+    }
+};
+
+VSSCore.RegisterJavascriptAction("JSAction_OneLineText", "Remove line breaks", "Shift+Ctrl+L");
