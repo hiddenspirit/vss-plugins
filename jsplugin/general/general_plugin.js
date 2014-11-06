@@ -145,10 +145,11 @@ VSSPlugin = {
   LINE_COL_IDX :     VSSCore.LAST_CORE_COL_IDX + 5, // Maximum line length
   PIXELS_COL_IDX :   VSSCore.LAST_CORE_COL_IDX + 6, // Maximum pixel width
   BLANK_COL_IDX :    VSSCore.LAST_CORE_COL_IDX + 7, // Blank
+  BALANCE_COL_IDX :  VSSCore.LAST_CORE_COL_IDX + 8, // Line balance
 
   // Get the number of extra-columns (called only at VSS startup)
   GetExtraColumnsCount : function() {
-    return 7;
+    return 8;
   },
 
   // Get the title of each extra-column (called only at VSS startup)
@@ -161,6 +162,7 @@ VSSPlugin = {
       case this.LINE_COL_IDX:     return "Line";
       case this.PIXELS_COL_IDX:   return "Pixels";
       case this.BLANK_COL_IDX:    return "Blank";
+      case this.BALANCE_COL_IDX:  return "Balance";
       default: return "";
     }
   },
@@ -175,6 +177,7 @@ VSSPlugin = {
       case this.LINE_COL_IDX:     return 32;
       case this.PIXELS_COL_IDX:   return 40;
       case this.BLANK_COL_IDX:    return 40;
+      case this.BALANCE_COL_IDX:  return 52;
       default: return "";
     }
   },
@@ -189,6 +192,7 @@ VSSPlugin = {
       case this.LINE_COL_IDX:     return true;
       case this.PIXELS_COL_IDX:   return true;
       case this.BLANK_COL_IDX:    return true;
+      case this.BALANCE_COL_IDX:  return true;
       default: return false;
     }
   },
@@ -203,6 +207,7 @@ VSSPlugin = {
       case this.LINE_COL_IDX:     return true;
       case this.PIXELS_COL_IDX:   return true;
       case this.BLANK_COL_IDX:    return true;
+      case this.BALANCE_COL_IDX:  return true;
       default: return false;
     }
   },
@@ -281,6 +286,13 @@ VSSPlugin = {
         }
 
         return 0xffffff;    // White
+
+      case this.BALANCE_COL_IDX:
+        if (this.cache >= .5) return 0x99ff99;  // P color
+        if (this.cache >= .4) return 0xccff99;  // G color
+        if (this.cache >= .3) return 0xffff99;  // ABF color
+        if (this.cache >= .2) return 0xffcc99;  // FA color
+        return 0xff9999;                         // TF color
 
       default:
         return 0xffffff;    // White
@@ -399,6 +411,32 @@ VSSPlugin = {
         }
 
         return "";
+
+      case this.BALANCE_COL_IDX:
+        var lines = Common.getLines(CurrentSub.StrippedText);
+        var numLines = lines.length;
+        var minLineLen = Infinity;
+        var maxLineLen = 0;
+
+        for (var i = 0; i < numLines; ++i) {
+            var lineLen = lines[i].length;
+
+            if (lineLen > maxLineLen) {
+                maxLineLen = lineLen;
+            }
+            if (lineLen < minLineLen) {
+                minLineLen = lineLen;
+            }
+        }
+
+        this.cache = minLineLen / maxLineLen || 1;
+        var pct = Math.round(this.cache * 100);
+        var numBlanks = 2 - Math.floor(Math.log(pct) / Math.log(10));
+        var blanks = "";
+        for (var i = 0; i < numBlanks; ++i) {
+            blanks += "  ";
+        }
+        return blanks + pct + "%";
 
       default: return "";
     }
