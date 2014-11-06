@@ -25,6 +25,12 @@ VSSPlugin = {
     "en = English\n" +
     "fr = French" },
 
+  ParamTwoConsecutiveHyphens : { Value : 0, Unit : "(0/1)", Description:
+    "Allow \"--\" (two consecutive hyphens) " +
+    "as an interuption mark in English.\n" +
+    "0 = Off (default)\n"+
+    "1 = On" },
+
   ParamUseNarrowNoBreakSpace : { Value : 0, Unit : "(0/1)", Description :
     "Use narrow no-break space character (French – Unicode).\n" +
     "0 = Disabled (default)\n" +
@@ -798,7 +804,15 @@ VSSPlugin = {
 
                     return true;
                 }
+            },
+            
+            {   re: /--/mg,
+                msg: "Two consecutive hyphens not allowed; use “…” instead",
+                replaceby: "...",
+                precondition: function() {
+                    return !VSSPlugin.ParamTwoConsecutiveHyphens.Value;
             }
+        }
         ],
 
         nonUnicode: [
