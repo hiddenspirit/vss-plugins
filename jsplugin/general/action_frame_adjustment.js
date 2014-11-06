@@ -156,11 +156,31 @@ JSAction_NormalizeTimings = {
 };
 
 
+JSAction_NormalizeTimingsWeb = {
+  onExecute : function() {
+    var normalizeTiming = function(timing) {
+        var rate = 250
+        return Math.round(timing / rate) * rate;
+    };
+    for (var sub = VSSCore.GetFirst(); sub; sub = nextSub) {
+        var nextSub = VSSCore.GetNext(sub);
+        sub.Start = normalizeTiming(sub.Start);
+        sub.Stop = normalizeTiming(sub.Stop);
+    }
+  }
+};
+
+
 VSSCore.RegisterJavascriptAction(
     "JSAction_NormalizeTimings",
     "Normalize all timings",
     "Shift+Ctrl+N");
 
+// VSSCore.RegisterJavascriptAction(
+    // "JSAction_NormalizeTimingsWeb",
+    // "Normalize for Web",
+    // "Shift+Ctrl+Y");
+    
 VSSCore.RegisterJavascriptAction(
     "JSAction_StartMinusOneFrame",
     "Shift start time by -1 frame",
