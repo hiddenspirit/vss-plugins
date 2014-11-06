@@ -37,13 +37,16 @@ VSSPlugin = {
   ParamMaxPixelsPerLine : { Value : 454, Unit : "pixels", Description :
     "Maximum line width in pixels, " +
     "for one line subtitles (default: 454)." },
-  ParamStrictMaxPixelsPerLine : { Value : 454, Unit : "pixels", Description :
+  ParamStrictMaxPixelsPerLine : { Value : 500, Unit : "pixels", Description :
     "Strict maximum line width in pixels, " +
-    "for subtitles of two or more lines (default: 454)." },
+    "for subtitles of two or more lines (default: 500)." },
   ParamFont : { Value : "Arial,18,1", Unit : "name,size,bold", Description :
     "Font used for pixel measurements (default: Arial,18,1)" },
   ParamMaxLines : { Value : 2, Unit : "lines", Description :
     "Maximum number of lines per subtitle (default: 2)." },
+  ParamUnbalancedLinesRatio : { Value : 25, Unit : "%", Description :
+    "Check for unbalanced lines, i.e. when the shorter line is below " +
+    "the specified ratio compared to the longer one (default: 25%)" },
   ParamNoNeedForTwoLines : { Value : 1, Unit : "(0/1/2)", Description :
     "No need for two (or more) lines detection mode.\n" +
     "0 = Off\n" +
@@ -77,6 +80,7 @@ VSSPlugin = {
   TooLongLineMessage : "too long line: {value} {unit}",
   TooLongLineMessageAcceptable : "too long line: {value} {unit}, ACCEPTABLE",
   TooLongNthLineMessage : "too long {nth} line: {value} {unit}",
+  UnbalancedLinesMessage : "unbalanced lines with ratio: {pct}% in {unit})",
   //SingleLineDialogMessage : "single-line dialog",
   BadSplitMessage : "possibly a bad split after: {word}",
 
@@ -127,6 +131,17 @@ VSSPlugin = {
             this.TooLongNthLineMessage,
             {nth: Common.getNthText(result.lineIndex + 1),
             value: result.value, unit: result.unit});
+    }
+
+    // Unbalanced lines
+    if (this.ParamUnbalancedLinesRatio.Value) {
+        var result = UnbalancedLines[this.ParamMode.Value](lines);
+
+        if (result) {
+            return Common.formatMessage(this.UnbalancedLinesMessage,
+                {pct: Math.round(result.ratio * 100),
+                 unit: result.unit});
+        }
     }
 
     // Single-line dialog.
@@ -320,6 +335,99 @@ var TooLongLine = new Array(
             strictMax: VSSPlugin.ParamStrictMaxPixelsPerLine.Value,
             unit: VSSPlugin.ParamMaxPixelsPerLine.Unit} :
             null;
+    }
+);
+
+var UnbalancedLines = new Array(
+    undefined,
+
+    // Character mode.
+    function(lines) {
+        var minLineLen = Infinity;
+        var maxLineLen = 0;
+        var numLines = lines.length;
+        var minRatio = VSSPlugin.ParamUnbalancedLinesRatio.Value / 100;
+
+        for (var i = 0; i < numLines; ++i) {
+            var lineLen = lines[i].length;
+
+            if (lineLen > maxLineLen) {
+                maxLineLen = lineLen;
+            }
+            if (lineLen < minLineLen) {
+                minLineLen = lineLen;
+            }
+        }
+
+        var ratio = minLineLen / maxLineLen || 1;
+        return ratio < minRatio ? {ratio : ratio, unit : "characters"} : null;
+    },
+
+    // Pixel mode.
+    function(lines) {
+        var minPixelLineLen = Infinity;
+        var maxPixelLineLen = 0;
+        var numLines = lines.length;
+        var minRatio = VSSPlugin.ParamUnbalancedLinesRatio.Value / 100;
+
+        for (var i = 0; i < numLines; ++i) {
+            var pixelLineLen = Common.getPixelWidth(lines[i],
+                VSSPlugin.ParamFont.Value);
+
+            if (pixelLineLen > maxPixelLineLen) {
+                maxPixelLineLen = pixelLineLen;
+            }
+            if (pixelLineLen < minPixelLineLen) {
+                minPixelLineLen = pixelLineLen;
+            }
+        }
+
+        var ratio = minPixelLineLen / maxPixelLineLen || 1;
+        return ratio < minRatio ? {ratio : ratio, unit : "pixels"} : null;
+    },
+
+    // Character and pixel mode.
+    function(lines) {
+        var numLines = lines.length;
+        var minRatio = VSSPlugin.ParamUnbalancedLinesRatio.Value / 100;
+
+        var minPixelLineLen = Infinity;
+        var maxPixelLineLen = 0;
+
+        for (var i = 0; i < numLines; ++i) {
+            var pixelLineLen = Common.getPixelWidth(lines[i],
+                VSSPlugin.ParamFont.Value);
+
+            if (pixelLineLen > maxPixelLineLen) {
+                maxPixelLineLen = pixelLineLen;
+            }
+            if (pixelLineLen < minPixelLineLen) {
+                minPixelLineLen = pixelLineLen;
+            }
+        }
+
+        var ratio = minPixelLineLen / maxPixelLineLen || 1;
+
+        if (ratio < minRatio) {
+            return {ratio : ratio, unit : "pixels"};
+        }
+
+        var minLineLen = Infinity;
+        var maxLineLen = 0;
+
+        for (var i = 0; i < numLines; ++i) {
+            var lineLen = lines[i].length;
+
+            if (lineLen > maxLineLen) {
+                maxLineLen = lineLen;
+            }
+            if (lineLen < minLineLen) {
+                minLineLen = lineLen;
+            }
+        }
+
+        var ratio = minLineLen / maxLineLen || 1;
+        return ratio < minRatio ? {ratio : ratio, unit : "characters"} : null;
     }
 );
 
