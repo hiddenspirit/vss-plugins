@@ -205,6 +205,11 @@ isDialog : function(strippedText) {
     return (/^[\-–—]\s/m).test(strippedText);
 },
 
+// Check whether a text is a start of a sentence.
+isStartOfSentence : function(strippedText) {
+    return strippedText.charAt(0) == strippedText.charAt(0).toUpperCase();
+},
+
 // Check whether a text is an end of a sentence.
 isEndOfSentence : function(strippedText) {
     return ".?!…".indexOf(strippedText.charAt(strippedText.length - 1)) >= 0;
