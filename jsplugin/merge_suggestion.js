@@ -13,7 +13,7 @@ VSSPlugin = {
   Message : "Merge suggestion",
 
   // Plugin parameters available from VSS GUI (name must start with "Param")
-  ParamMode : { Value : 1, Unit : "(1/2/3)", Description :
+  PrivateMode : { Value : 4, Unit : "(1/2/3)", Description :
     "Detection mode.\n" +
     "1 = Unfinished sentences (safe if punctuation is correct) (default)\n" +
     "2 = Manual dialogs (manually check for different speakers)\n" +
@@ -30,7 +30,7 @@ VSSPlugin = {
     "4 = Good" },
   ParamMaxPerLine : { Value : 40, Unit : "Characters", Description :
     "Maximum number of characters per line after merging (default: 40)." },
-  ParamEnableFixError : { Value : 0, Unit : "(0/1)", Description :
+  PrivateEnableFixError : { Value : 0, Unit : "(0/1)", Description :
     "Enable fix error (experimental).\n" +
     "0 = Off (default)\n" +
     "1 = On (One merge can be done at a time, " +
@@ -58,7 +58,7 @@ VSSPlugin = {
   },
 
   FixError : function(CurrentSub, PreviousSub, NextSub) {
-    if (!this.ParamEnableFixError.Value) {
+    if (!this.PrivateEnableFixError.Value) {
         return;
     }
 
@@ -120,7 +120,54 @@ VSSPlugin = {
         return null;
     }
 
-    switch (this.ParamMode.Value) {
+    switch (this.PrivateMode.Value) {
+    case 4: // New mode
+        if (Common.getOneLineText(CurrentSub.StrippedText).length >
+            this.ParamMaxPerLine.Value) {
+            return null;
+        }
+        if (Common.getOneLineText(NextSub.StrippedText).length >
+            this.ParamMaxPerLine.Value) {
+            return null;
+        }
+
+        var lines = Common.getLines(CurrentSub.StrippedText);
+        var num_sentences = 0
+        for (var i = 0; i < lines.length; ++i) {
+            if (Common.isEndOfSentence(lines[i])) {
+                ++num_sentences;
+            }
+        }
+        if (num_sentences > 1) {
+            return null;
+        }
+        var lines = Common.getLines(NextSub.StrippedText);
+        var num_sentences = 0
+        for (var i = 0; i < lines.length; ++i) {
+            if (Common.isEndOfSentence(lines[i])) {
+                ++num_sentences;
+            }
+        }
+        if (num_sentences > 1) {
+            return null;
+        }
+        
+        if (Common.isEndOfSentence(CurrentSub.StrippedText) &&
+                !Common.isEndOfSentence(NextSub.StrippedText)) {
+            return null;
+        }
+        
+        if (!Common.isStartOfSentence(CurrentSub.StrippedText) &&
+                Common.isEndOfSentence(CurrentSub.StrippedText)) {
+            return null;
+        }
+
+        var mergedText = Common.getOneLineText(CurrentSub.Text) +
+            Common.NEWLINE +
+            this.DialogPrefixes[1] + Common.getOneLineText(NextSub.Text);
+        var strippedMergedText = Common.getStrippedText(mergedText);
+        break;
+
     case 1: // Sentences.
         if (Common.isEndOfSentence(CurrentSub.StrippedText)) {
             return null;
