@@ -807,8 +807,8 @@ VSSPlugin = {
             },
             
             {   re: /--/mg,
-                msg: "Two consecutive hyphens not allowed; use “…” instead",
-                replaceby: "...",
+                msg: "Two consecutive hyphens not allowed; use “—” instead",
+                replaceby: "—",
                 precondition: function() {
                     return !VSSPlugin.ParamTwoConsecutiveHyphens.Value;
             }
