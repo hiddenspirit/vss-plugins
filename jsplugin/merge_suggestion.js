@@ -152,7 +152,8 @@ VSSPlugin = {
             return null;
         }
         
-        if (Common.isEndOfSentence(CurrentSub.StrippedText) &&
+        if (!Common.isStartOfSentence(CurrentSub.StrippedText) &&
+                Common.isEndOfSentence(CurrentSub.StrippedText) &&
                 !Common.isEndOfSentence(NextSub.StrippedText)) {
             return null;
         }
@@ -164,7 +165,7 @@ VSSPlugin = {
 
         var mergedText = Common.getOneLineText(CurrentSub.Text) +
             Common.NEWLINE +
-            this.DialogPrefixes[1] + Common.getOneLineText(NextSub.Text);
+            Common.getOneLineText(NextSub.Text);
         var strippedMergedText = Common.getStrippedText(mergedText);
         break;
 
