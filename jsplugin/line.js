@@ -42,16 +42,16 @@ VSSPlugin = {
     "for subtitles of two or more lines (default: 500)." },
   ParamMaxLines : { Value : 2, Unit : "lines", Description :
     "Maximum number of lines per subtitle (default: 2)." },
-  ParamUnbalancedLinesRatio : { Value : 25, Unit : "%", Description :
+  ParamUnbalancedLinesRatio : { Value : 12.5, Unit : "%", Description :
     "Check for unbalanced lines, i.e. when the shorter line is below " +
-    "the specified ratio compared to the longer one (default: 25%)" },
+    "the specified ratio compared to the longer one (default: 12.5%)" },
   ParamNoNeedForTwoLines : { Value : 1, Unit : "(0/1/2)", Description :
     "No need for two (or more) lines detection mode.\n" +
     "0 = Off\n" +
     "1 = Detect for incomplete sentences (default)\n" +
     "2 = Detect for all lines" },
   ParamTwoLinesException : {
-    Value : "\bsous-titres.eu\b",
+    Value : "\\bsous-titres.eu\\b",
     Unit : "regular expression",
     Description :
     "Don't trigger a \"no need for two lines\" error " +

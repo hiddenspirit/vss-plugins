@@ -261,7 +261,7 @@ VSSPlugin = {
         if (this.cache <= 368) return 0x99ff99;  // P color
         if (this.cache <= 429) return 0xccff99;  // G color
         if (this.cache <= 454) return 0xffff99;  // ABF color
-        if (this.cache <= 465) return 0xffcc99;  // FA color
+        if (this.cache <= 500) return 0xffcc99;  // FA color
         return 0xff9999;                         // TF color
 
       case this.BLANK_COL_IDX:
@@ -288,11 +288,11 @@ VSSPlugin = {
         return 0xffffff;    // White
 
       case this.BALANCE_COL_IDX:
-        if (this.cache >= .5) return 0x99ff99;  // P color
-        if (this.cache >= .4) return 0xccff99;  // G color
-        if (this.cache >= .3) return 0xffff99;  // ABF color
-        if (this.cache >= .2) return 0xffcc99;  // FA color
-        return 0xff9999;                         // TF color
+        if (this.cache >= 0.750) return 0x99ff99;  // P color
+        if (this.cache >= 0.500) return 0xccff99;  // G color
+        if (this.cache >= 0.250) return 0xffff99;  // ABF color
+        if (this.cache >= 0.125) return 0xffcc99;  // FA color
+        return 0xff9999;                           // TF color
 
       default:
         return 0xffffff;    // White
