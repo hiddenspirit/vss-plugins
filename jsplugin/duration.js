@@ -28,7 +28,8 @@ VSSPlugin = {
     "1 = Detect acceptable limits when not next to a subtitle or a scene change (default)\n" +
     "2 = Detect acceptable limits when not next to a scene change\n" +
     "3 = Detect all acceptable limits" },
-  ParamTolerance : { Value : 0, Unit : "ms", Description : "Tolerance" },
+  ParamTolerance : { Value : 1, Unit : "ms", Description :
+    "Tolerance (default: 1)" },
 
   // Messages
   TooShortMessage : "< {minSeconds} s",
