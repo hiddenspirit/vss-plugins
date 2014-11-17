@@ -38,7 +38,7 @@ VSSPlugin = {
 
   // Private constants
   DialogPrefixes : new Array("- ", "- "),
-  SuggestionMessage : "RS: {rs}, text: {text}",
+  SuggestionMessage : "RS={rs}{type}",
 
   // HasError method called for each subtitle during the error checking
   // If there is an error on CurrentSub
@@ -51,7 +51,8 @@ VSSPlugin = {
     if (null !== result) {
         return Common.formatMessage(this.SuggestionMessage,
             {rs: Common.decimal1Round(result.rs),
-            text: result.text.replace(Common.NEWLINE_PATTERN, "|")});
+            // text: result.text.replace(Common.NEWLINE_PATTERN, "|"),
+            type: result.type});
     }
 
     return "";
@@ -80,6 +81,7 @@ VSSPlugin = {
     }
 
     var mergedDuration = NextSub.Stop - CurrentSub.Start;
+    var mergeType = "";
 
     // Don't merge if the resulting subtitle would exceed the maximum duration.
     if (mergedDuration > VSSCore.MaximumDuration) {
@@ -151,22 +153,34 @@ VSSPlugin = {
         if (num_sentences > 1) {
             return null;
         }
-        
+
         if (!Common.isStartOfSentence(CurrentSub.StrippedText) &&
                 Common.isEndOfSentence(CurrentSub.StrippedText) &&
                 !Common.isEndOfSentence(NextSub.StrippedText)) {
             return null;
         }
-        
+
         if (!Common.isStartOfSentence(CurrentSub.StrippedText) &&
                 Common.isEndOfSentence(CurrentSub.StrippedText)) {
             return null;
+        }
+
+        if (Common.isEndOfSentence(CurrentSub.StrippedText) &&
+                !Common.isEndOfSentence(NextSub.StrippedText)) {
+            var m = (this.ParamMaxPerLine.Value -
+                     this.DialogPrefixes[0].length);
+            if (Common.getOneLineText(CurrentSub.StrippedText).length > m ||
+                    Common.getOneLineText(NextSub.StrippedText).length > m) {
+                return null;
+            }
+            mergeType = ", dialogue";
         }
 
         var mergedText = Common.getOneLineText(CurrentSub.Text) +
             Common.NEWLINE +
             Common.getOneLineText(NextSub.Text);
         var strippedMergedText = Common.getStrippedText(mergedText);
+
         break;
 
     case 1: // Sentences.
@@ -214,7 +228,7 @@ VSSPlugin = {
     var mergedRs = Common.getRsFromLengthDuration(strippedMergedText.length,
         mergedDuration);
 
-    return {rs: mergedRs, text: mergedText};
+    return {rs: mergedRs, text: mergedText, type: mergeType};
   }
 };
 
