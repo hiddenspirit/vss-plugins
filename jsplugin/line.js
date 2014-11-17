@@ -40,8 +40,6 @@ VSSPlugin = {
   ParamStrictMaxPixelsPerLine : { Value : 500, Unit : "pixels", Description :
     "Strict maximum line width in pixels, " +
     "for subtitles of two or more lines (default: 500)." },
-  ParamFont : { Value : "Arial,18,1", Unit : "name,size,bold", Description :
-    "Font used for pixel measurements (default: Arial,18,1)" },
   ParamMaxLines : { Value : 2, Unit : "lines", Description :
     "Maximum number of lines per subtitle (default: 2)." },
   ParamUnbalancedLinesRatio : { Value : 25, Unit : "%", Description :
@@ -73,6 +71,8 @@ VSSPlugin = {
     "en = English\n" +
     "fr = French\n" +
     "none = Disable" },
+  ParamFont : { Value : "Arial,18,1", Unit : "name,size,bold", Description :
+    "Font used for pixel measurements (default: Arial,18,1)" },
 
   // Messages
   TooManyLinesMessage : "too many: {value} {unit}",
