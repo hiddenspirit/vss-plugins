@@ -40,7 +40,7 @@ VSSPlugin = {
             }
         break;
         default: //normal mode
-            if ((OverlapInMs > 0) && (OverlapInMs >= VSSCore.MinimumBlank)) {
+            if ((OverlapInMs >= 0) && (OverlapInMs >= VSSCore.MinimumBlank)) {
                 return '';
             }
             if (OverlapInMs < 0) {
@@ -91,8 +91,8 @@ VSSPlugin = {
     }
 
     // Special case when OverlapInMs == 0
-    if (NextSub.Start == CurrentSub.Stop) {
-            NextSub.Start += 1;
-    }
+    // if (NextSub.Start == CurrentSub.Stop) {
+            // NextSub.Start += 1;
+    // }
   }
 };
