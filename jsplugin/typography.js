@@ -35,6 +35,11 @@ VSSPlugin = {
     "Use narrow no-break space character (French – Unicode).\n" +
     "0 = Disabled (default)\n" +
     "1 = Enabled" },
+   
+  ParamUnicodeTypography : { Value : 1, Unit : "(0/1)", Description :
+    "Use correct typography when the file is in Unicode.\n" +
+    "0 = Disabled\n" +
+    "1 = Enabled (default)" },
 
   UseSuperscripts : { Value : 0, Unit : "(0/1)", Description :
     "Use subscript characters (French – Unicode).\n" +
@@ -1005,7 +1010,7 @@ VSSPlugin = {
     var rules = this.Rules[this.ParamLanguage.Value] ||
                 this.Rules[Common.detectLanguage()],
         result = rules["all"],
-        extraRules = (VSSCore.IsUnicode ?
+        extraRules = (VSSCore.IsUnicode && this.ParamUnicodeTypography.Value ?
                       rules["unicode"] : rules["nonUnicode"]);
 
     if (extraRules) {
