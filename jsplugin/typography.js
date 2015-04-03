@@ -26,8 +26,8 @@ VSSPlugin = {
     "fr = French" },
 
   ParamTwoConsecutiveHyphens : { Value : 0, Unit : "(0/1)", Description:
-    "Allow \"--\" (two consecutive hyphens) " +
-    "as an interuption mark in English.\n" +
+    "Allow “--” (two consecutive hyphens) " +
+    "as an interruption mark in English.\n" +
     "0 = Off (default)\n"+
     "1 = On" },
 
