@@ -31,10 +31,10 @@ VSSPlugin = {
     "0 = Off (default)\n"+
     "1 = On" },
 
-  ParamUseNarrowNoBreakSpace : { Value : 0, Unit : "(0/1)", Description :
+  ParamUseNarrowNoBreakSpace : { Value : 1, Unit : "(0/1)", Description :
     "Use narrow no-break space character (French – Unicode).\n" +
-    "0 = Disabled (default)\n" +
-    "1 = Enabled" },
+    "0 = Disabled\n" +
+    "1 = Enabled (default)" },
    
   ParamUnicodeTypography : { Value : 1, Unit : "(0/1)", Description :
     "Use correct typography when the file is in Unicode.\n" +
