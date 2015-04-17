@@ -333,7 +333,7 @@ VSSPlugin = {
                 replaceby: "$1 %"
             },
             {
-                re: /([\wÀ-ÖØ-öø-ɏ."'’»])([\u00a0\u202f]*)([?!:;]+)/img,
+                re: /([\wÀ-ÖØ-öø-ɏ."'’»$£€¥])([\u00a0\u202f]*)([?!:;]+)/img,
                 msg: "Espace normale avant « ? », « ! », « ; » ou « : »",
                 replaceby: "$1 $3"
             },
