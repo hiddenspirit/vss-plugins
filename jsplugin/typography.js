@@ -787,8 +787,8 @@ VSSPlugin = {
                 msg: "\"OK\" must be uppercase",
                 replaceby: "$1OK$3" },
 
-            {   re: /[A-Z]{2,}[a-z]{2,}/mg,
-                msg: "Uppercase error" },
+            // {   re: /[A-Z]{2,}[a-z]{2,}/mg,
+                // msg: "Uppercase error" },
 
             {   re: /(\d+[.,]\d+)/mg,
                 msg: "Ignore dots and commas in numbers",
