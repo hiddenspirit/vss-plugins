@@ -795,8 +795,8 @@ VSSPlugin = {
                 replaceby: "[nombre=$1]",
                 exception: true },
 
-            {   re: /(\w+)?([\.,])(\w+)([\.,])?/mg,
-                msg: "One space after a dot or a comma",
+            {   re: /(\w+)?([\.,;!\?])(\w+)([\.,])?/mg,
+                msg: "One space after .,;!?",
                 replaceby: "$1$2 $3$4",
                 postcondition: function(text) {
                     if (["a.m.", "p.m."].indexOf(text) >= 0) {
@@ -811,7 +811,7 @@ VSSPlugin = {
                 }
             },
             
-            {   re: /--/mg,
+            {   re: /\s*--/mg,
                 msg: "Two consecutive hyphens not allowed; use “—” instead",
                 replaceby: "—",
                 precondition: function() {
