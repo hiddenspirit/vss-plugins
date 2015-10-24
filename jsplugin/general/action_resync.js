@@ -957,10 +957,11 @@ JSAction_EarlierSync = {
         if (
             sub.StrippedText.length &&
             sub.StrippedText.toUpperCase() == sub.StrippedText ||
-            /\\fade?\b/.test(sub.Text) || /sous-titres\.eu/.test(sub.Text) ||
-            /\{\\\*?FORCED\}/i.test(sub.Text)
+            /\\fade?\b/i.test(sub.Text) ||
+            /sous-titres\.eu/i.test(sub.Text) ||
+            /\\\*?FORCED\b/i.test(sub.Text)
         ) {
-            return;
+            continue;
         }
         var start = sub.Start;
         var sc = SceneChange.GetPrevious(start);
@@ -1012,10 +1013,11 @@ JSAction_LaterSync = {
         if (
             sub.StrippedText.length &&
             sub.StrippedText.toUpperCase() == sub.StrippedText ||
-            /\\fade?\b/.test(sub.Text) || /sous-titres\.eu/.test(sub.Text) ||
-            /\{\\\*?FORCED\}/i.test(sub.Text)
+            /\\fade?\b/i.test(sub.Text) ||
+            /sous-titres\.eu/i.test(sub.Text) ||
+            /\\\*?FORCED\b/i.test(sub.Text)
         ) {
-            return;
+            continue;
         }
         var start = sub.Start;
         var sc = SceneChange.GetPrevious(start);
