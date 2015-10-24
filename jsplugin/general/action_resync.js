@@ -949,13 +949,16 @@ JSAction_Resync2LateAudio = {
 JSAction_EarlierSync = {
   onExecute : function() {
     var delta = Common.getFrameDuration() * 1;
-    JSAction_Resync.iterSubs(function(sub) {
+    for (sub = VSSCore.GetFirstSelected(); sub;
+        sub = VSSCore.GetNextSelected(sub))
+    {
         nextSub = VSSCore.GetNext(sub);
         prevSub = VSSCore.GetPrevious(sub);
         if (
             sub.StrippedText.length &&
             sub.StrippedText.toUpperCase() == sub.StrippedText ||
-            /\\fade?\b/.test(sub.Text) || /sous-titres\.eu/.test(sub.Text)
+            /\\fade?\b/.test(sub.Text) || /sous-titres\.eu/.test(sub.Text) ||
+            /\{\\\*?FORCED\}/i.test(sub.Text)
         ) {
             return;
         }
@@ -993,7 +996,7 @@ JSAction_EarlierSync = {
         if (stop != sub.Stop) {
             sub.Stop = stop;
         }
-    }, VSSCore.GetFirstSelected().Index);
+    }
   }
 };
 
@@ -1001,13 +1004,16 @@ JSAction_EarlierSync = {
 JSAction_LaterSync = {
   onExecute : function() {
     var delta = Common.getFrameDuration() * 1;
-    JSAction_Resync.iterSubs(function(sub) {
+    for (sub = VSSCore.GetFirstSelected(); sub;
+        sub = VSSCore.GetNextSelected(sub))
+    {
         nextSub = VSSCore.GetNext(sub);
         prevSub = VSSCore.GetPrevious(sub);
         if (
             sub.StrippedText.length &&
             sub.StrippedText.toUpperCase() == sub.StrippedText ||
-            /\\fade?\b/.test(sub.Text) || /sous-titres\.eu/.test(sub.Text)
+            /\\fade?\b/.test(sub.Text) || /sous-titres\.eu/.test(sub.Text) ||
+            /\{\\\*?FORCED\}/i.test(sub.Text)
         ) {
             return;
         }
@@ -1045,7 +1051,7 @@ JSAction_LaterSync = {
         if (stop != sub.Stop) {
             sub.Stop = stop;
         }
-    }, VSSCore.GetFirstSelected().Index);
+    }
   }
 };
 
