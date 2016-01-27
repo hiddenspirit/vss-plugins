@@ -35,7 +35,7 @@ VSSPlugin = {
     "Use narrow no-break space character (French – Unicode).\n" +
     "0 = Disabled\n" +
     "1 = Enabled (default)" },
-   
+
   ParamUnicodeTypography : { Value : 1, Unit : "(0/1)", Description :
     "Use correct typography when the file is in Unicode.\n" +
     "0 = Disabled\n" +
@@ -237,9 +237,9 @@ VSSPlugin = {
                 msg: "Signe de ponctuation invalide « .... »",
                 replaceby: "..." },
 
-            {   re: /(\.{3}|…)\b/mg,
+            {   re: /(\.{3}|…)([\wÀ-ÖØ-öø-ɏ])/mg,
                 msg: "Espace après « … »",
-                replaceby: "$1 " },
+                replaceby: "$1 $2" },
 
             {   re: /(www.[^\s)]+)/mg,
                 msg: "Ignorer les points dans les URL (2)",
@@ -810,7 +810,7 @@ VSSPlugin = {
                     return true;
                 }
             },
-            
+
             {   re: /\s*--/mg,
                 msg: "Two consecutive hyphens not allowed; use “—” instead",
                 replaceby: "—",
