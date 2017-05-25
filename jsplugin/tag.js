@@ -23,8 +23,8 @@ VSSPlugin = {
         replaceby : "$&</$1>"
     },
     {   msg : "misplaced italics on a dialog",
-        re : /^(\{[^}]*\})?<i>([\-–—]\s*)(.*)<\/i>$/mg,
-        replaceby : "$1$2<i>$3</i>"
+        re : /^(\{[^}]*\})?<i>([\-–—]\s*)(.*)<\/i>(.*)$/mg,
+        replaceby : "$1$2<i>$3</i>$4"
     },
     {   msg : "misplaced italics on a dialog",
         re : /^(\{[^}]*\})?<i>([\-–—]\s*)(.*)\r\n([\-–—]\s*)(.*)<\/i>$/,
